@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Baddy.Views.LoginPage"
+             Title="{Binding Title}">
+    <Grid>
+        <ScrollView>
+            <StackLayout Orientation="Vertical">
+                <Label Text="{Binding Error}" 
+                       Style="{StaticResource ErrorMessage}" 
+                       IsVisible="{Binding Source={Binding Error}, Converter={StaticResource NotEmptyStringToBool}}" />
+                <Label Text="Card number" />
+                <Entry Text="{Binding CardNumber}" />
+                <Label Text="Pin number" />
+                <Entry Text="{Binding PinNumber}" />
+                <Button Text="Login"
+                        Command="{Binding LoginCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
