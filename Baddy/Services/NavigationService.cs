@@ -29,6 +29,9 @@ namespace Baddy.Services
                 case Type model when model == typeof(LoginViewModel):
                     currentMaster.Detail = new NavigationPage(new LoginPage());
                     break;
+                case Type model when model == typeof(ProfileViewModel):
+                    currentMaster.Detail = new NavigationPage(new ProfilePage());
+                    break;
                 default:
                     await currentMaster.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
                     break;

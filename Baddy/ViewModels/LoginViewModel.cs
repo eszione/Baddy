@@ -1,4 +1,8 @@
-﻿using Baddy.Interfaces;
+﻿using Baddy.Helpers;
+using Baddy.Interfaces;
+using Baddy.Models;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -45,17 +49,35 @@ namespace Baddy.ViewModels
         }
 
         private bool CanLogin =>
-            !string.IsNullOrWhiteSpace(CardNumber) && !string.IsNullOrWhiteSpace(PinNumber);
+            !string.IsNullOrWhiteSpace(CardNumber) && 
+            !string.IsNullOrWhiteSpace(PinNumber) && 
+            PinNumber.Length > 1;
 
         private async Task Login()
         {
-            var loginResult = await _authService.Login(CardNumber, PinNumber);
-            _appContext.LoggedIn = await _authService.Authorize(loginResult.Token);
+            try
+            {
+                Error = string.Empty;
 
-            if (_appContext.LoggedIn)
+                var loginResult = await _authService.Login(CardNumber, PinNumber);
+                if (loginResult == null || string.IsNullOrWhiteSpace(loginResult.Token))
+                    throw new HttpException(HttpStatusCode.BadRequest, "Incorrect details");
+
+                _appContext.LoggedIn = await _authService.Authorize(loginResult.Token);
+
+                if (!_appContext.LoggedIn)
+                    throw new HttpException(HttpStatusCode.Unauthorized);
+
                 await _navigationService.NavigateTo<ProfileViewModel>();
-            else
-                Error = "Incorrect details";
+            }
+            catch (HttpException ex)
+            {
+                Error = ExceptionHelper.Handle(ex);
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
         }
     }
 }

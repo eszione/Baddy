@@ -1,27 +1,34 @@
 ﻿using Baddy.Interfaces;
+using Baddy.Models;
 using System.Threading.Tasks;
 
 namespace Baddy.ViewModels
 {
     public class ProfileViewModel : BaseViewModel
     {
-        private readonly IBookingService _bookingService;
+        private Profile _profile;
+        public Profile Profile { get => _profile; set => SetProperty(ref _profile, value); }
+
+        private readonly IProfileService _profileService;
 
         public ProfileViewModel(
             IAppContext appContext,
             INavigationService navigationService,
-            IBookingService bookingService) : base(appContext, navigationService)
+            IProfileService profileService) : base(appContext, navigationService)
         {
-            _bookingService = bookingService;
             Title = "Profile";
+            _profileService = profileService;
 
-            _ = GetBalance();
+            Task.Run(async () =>
+            {
+                await SetProfile();
+            });
         }
 
-        private async Task GetBalance()
+        private async Task SetProfile()
         {
-            var bookings = await _bookingService.Get();
-
+            Profile = await _profileService.Get();
+            _appContext.Profile = Profile;
         }
     }
 }

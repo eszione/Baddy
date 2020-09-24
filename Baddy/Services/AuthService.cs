@@ -35,9 +35,7 @@ namespace Baddy.Services
                 new KeyValuePair<string, string>("token", token)
             };
 
-            var result = await _httpService.Post(parameters, UrlConstants.Authorization);
-
-            return result.StatusCode == HttpStatusCode.OK;
+            return await _httpService.PostXml(parameters, UrlConstants.Authorization);
         }
     }
 }

@@ -31,6 +31,7 @@ namespace Baddy
         {
             dictionary.Add(ColourStyles.Instance);
             dictionary.Add(CommonStyles.Instance);
+            dictionary.Add(ConverterStyles.Instance);
         }
     }
 }

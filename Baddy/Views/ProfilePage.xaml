@@ -6,6 +6,26 @@
     <Grid>
         <ScrollView>
             <StackLayout Orientation="Vertical">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Name: " />
+                    <Label Text="{Binding Profile.Name}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Email: " />
+                    <Label Text="{Binding Profile.Email}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Phone: " />
+                    <Label Text="{Binding Profile.Mobile}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Card Balance: " />
+                    <Label Text="{Binding Profile.Balance}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Card Expiry: " />
+                    <Label Text="{Binding Profile.CardExpiry}" />
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </Grid>

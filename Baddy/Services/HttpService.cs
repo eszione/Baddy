@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Baddy.Interfaces;
+using System.Xml;
+using System.IO;
+using HtmlAgilityPack;
+using Baddy.Helpers;
+using Baddy.Models;
 
 namespace Baddy.Services
 {
@@ -16,7 +21,7 @@ namespace Baddy.Services
             _client = new HttpClient();
         }
 
-        public async Task<T> Get<T>(string url)
+        public async Task<XmlDocument> GetXml(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -24,41 +29,96 @@ namespace Baddy.Services
 
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(stringResponse);
+            var scriptIndex = stringResponse.IndexOf("<script>");
+            stringResponse = stringResponse.Substring(0, scriptIndex - 1).Replace("\n", string.Empty);
 
-            return JsonConvert.DeserializeObject<T>(stringResponse);
+            var ms = new MemoryStream();
+            var xml = XmlWriter.Create(ms);
+
+            var doc = new HtmlDocument
+            {
+                OptionOutputAsXml = true,
+            };
+            doc.LoadHtml(stringResponse);
+            doc.Save(xml);
+
+            ms.Position = 0;
+
+            var sr = new StreamReader(ms);
+            var parsedResponse = sr.ReadToEnd();
+
+            Console.WriteLine(parsedResponse);
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(parsedResponse);
+
+            return xmlDoc;
         }
 
         public async Task<T> Post<T>(IEnumerable<KeyValuePair<string, string>> parameters, string url)
         {
-            var content = new FormUrlEncodedContent(parameters);
-
-            var request = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = content
-            };
+            var request = PreparePostMessage(parameters, url);
 
             var response = await _client.SendAsync(request);
 
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            Console.WriteLine(stringResponse);
-
-            return JsonConvert.DeserializeObject<T>(stringResponse);
+            return await HandleResponse<T>(response);
         }
 
         public async Task<HttpResponseMessage> Post(IEnumerable<KeyValuePair<string, string>> parameters, string url)
         {
+            var request = PreparePostMessage(parameters, url);
+
+            return await _client.SendAsync(request);
+        }
+
+        public async Task<bool> PostXml(IEnumerable<KeyValuePair<string, string>> parameters, string url)
+        {
+            try
+            {
+                var request = PreparePostMessage(parameters, url);
+
+                var response = await _client.SendAsync(request);
+
+                var stringResponse = await response.Content.ReadAsStringAsync();
+
+                var ms = new MemoryStream();
+                var xml = XmlWriter.Create(ms);
+
+                var doc = new HtmlDocument
+                {
+                    OptionOutputAsXml = true,
+                };
+                doc.LoadHtml(stringResponse);
+                doc.Save(xml);
+
+                return true;
+            } 
+            catch
+            {
+                return false;
+            }
+        }
+
+        private HttpRequestMessage PreparePostMessage(IEnumerable<KeyValuePair<string, string>> parameters, string url)
+        {
             var content = new FormUrlEncodedContent(parameters);
 
-            var request = new HttpRequestMessage(HttpMethod.Post, url)
+            return new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = content
             };
+        }
 
-            var response = await _client.SendAsync(request);
+        private async Task<T> HandleResponse<T>(HttpResponseMessage response)
+        {
+            var content = await response.Content.ReadAsStringAsync();
 
-            return response;
+            Console.WriteLine(content);
+
+            if (response.IsSuccessStatusCode)
+                return JsonSerializerHelper.GetObject<T>(content);
+            else
+                throw new HttpException(response.StatusCode, JsonSerializerHelper.GetString(content));
         }
     }
 }
