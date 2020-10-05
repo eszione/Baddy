@@ -2,9 +2,9 @@
 {
     public enum MenuAction
     {
-        GetBalance,
-        GetBookings,
+        Home,
         Login,
-        Logout
+        Logout,
+        Profile
     }
 }

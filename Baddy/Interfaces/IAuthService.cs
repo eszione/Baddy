@@ -7,5 +7,6 @@ namespace Baddy.Interfaces
     {
         Task<LoginResult> Login(string username, string password);
         Task<bool> Authorize(string token);
+        void Logoff();
     }
 }

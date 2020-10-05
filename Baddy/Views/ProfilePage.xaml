@@ -6,6 +6,9 @@
     <Grid>
         <ScrollView>
             <StackLayout Orientation="Vertical">
+                <Label Text="{Binding Error}" 
+                       Style="{StaticResource ErrorMessage}" 
+                       IsVisible="{Binding Error, Converter={StaticResource NotEmptyStringToBool}}" />
                 <StackLayout Orientation="Horizontal">
                     <Label Text="Name: " />
                     <Label Text="{Binding Profile.Name}" />
@@ -28,5 +31,10 @@
                 </StackLayout>
             </StackLayout>
         </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Green"
+                           HeightRequest="40"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand" />
     </Grid>
 </ContentPage>

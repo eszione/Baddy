@@ -22,7 +22,10 @@ namespace Baddy.Helpers
                         break;
                     }
                 default:
-                    break;
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+                        break;
+                    }
             }
         }
 

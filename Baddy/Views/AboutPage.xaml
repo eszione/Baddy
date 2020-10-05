@@ -59,6 +59,10 @@
                         TextColor="White" />
             </StackLayout>
         </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Green"
+                           HeightRequest="40"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand" />
     </Grid>
-    
 </ContentPage>

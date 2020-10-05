@@ -10,13 +10,16 @@ namespace Baddy.ViewModels
     {
         protected readonly IAppContext _appContext;
         protected readonly INavigationService _navigationService;
+        protected readonly IStorageService _storageService;
 
         public BaseViewModel(
             IAppContext appContext,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IStorageService storageService)
         {
             _appContext = appContext;
             _navigationService = navigationService;
+            _storageService = storageService;
         }
 
         private bool isBusy;

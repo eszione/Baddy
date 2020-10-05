@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Baddy.Constants;
 using Baddy.Interfaces;
@@ -10,10 +9,14 @@ namespace Baddy.Services
     public class AuthService : IAuthService
     {
         private readonly IHttpService _httpService;
+        private readonly IAppContext _appContext;
 
-        public AuthService(IHttpService httpService)
+        public AuthService(
+            IHttpService httpService,
+            IAppContext appContext)
         {
             _httpService = httpService;
+            _appContext = appContext;
         }
 
         public async Task<LoginResult> Login(string username, string password)
@@ -36,6 +39,12 @@ namespace Baddy.Services
             };
 
             return await _httpService.PostXml(parameters, UrlConstants.Authorization);
+        }
+
+        public void Logoff()
+        {
+            _appContext.LoggedIn = false;
+            _appContext.Profile = null;
         }
     }
 }

@@ -6,5 +6,7 @@ namespace Baddy.Interfaces
     {
         Task CloseMenu();
         Task NavigateTo<T>(params object[] parameters);
+        Task NavigateToHome();
+        Task RefreshMenu();
     }
 }

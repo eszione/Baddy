@@ -12,5 +12,15 @@ namespace Baddy.Views
 
             BindingContext = ServiceLocator.Current.GetInstance<LoginViewModel>();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                CardNumber.Focus();
+            });
+        }
     }
 }

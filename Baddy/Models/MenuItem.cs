@@ -8,6 +8,7 @@ namespace Baddy.Models
     {
         public string Name { get; set; }
         public MenuAction Action { get; set; }
+        public MenuItemVisibility Visibility { get; set; }
         public Func<Task> Handler { get; set; }
     }
 }

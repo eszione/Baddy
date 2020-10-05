@@ -9,6 +9,7 @@ using System.IO;
 using HtmlAgilityPack;
 using Baddy.Helpers;
 using Baddy.Models;
+using System.Net;
 
 namespace Baddy.Services
 {
@@ -23,36 +24,43 @@ namespace Baddy.Services
 
         public async Task<XmlDocument> GetXml(string url)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-
-            var response = await _client.SendAsync(request);
-
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            var scriptIndex = stringResponse.IndexOf("<script>");
-            stringResponse = stringResponse.Substring(0, scriptIndex - 1).Replace("\n", string.Empty);
-
-            var ms = new MemoryStream();
-            var xml = XmlWriter.Create(ms);
-
-            var doc = new HtmlDocument
+            try
             {
-                OptionOutputAsXml = true,
-            };
-            doc.LoadHtml(stringResponse);
-            doc.Save(xml);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-            ms.Position = 0;
+                var response = await _client.SendAsync(request);
 
-            var sr = new StreamReader(ms);
-            var parsedResponse = sr.ReadToEnd();
+                var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(parsedResponse);
+                var scriptIndex = stringResponse.IndexOf("<script>");
+                stringResponse = stringResponse.Substring(0, scriptIndex - 1).Replace("\n", string.Empty);
 
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(parsedResponse);
+                var ms = new MemoryStream();
+                var xml = XmlWriter.Create(ms);
 
-            return xmlDoc;
+                var doc = new HtmlDocument
+                {
+                    OptionOutputAsXml = true,
+                };
+                doc.LoadHtml(stringResponse);
+                doc.Save(xml);
+
+                ms.Position = 0;
+
+                var sr = new StreamReader(ms);
+                var parsedResponse = sr.ReadToEnd();
+
+                Console.WriteLine(parsedResponse);
+
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(parsedResponse);
+
+                return xmlDoc;
+            }
+            catch (Exception ex)
+            {
+                throw new HttpException(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         public async Task<T> Post<T>(IEnumerable<KeyValuePair<string, string>> parameters, string url)

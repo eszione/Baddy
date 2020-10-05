@@ -9,6 +9,7 @@ using Unity;
 using CommonServiceLocator;
 using Unity.ServiceLocation;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Baddy.Interfaces;
 
 namespace Baddy.Droid
 {
@@ -24,8 +25,13 @@ namespace Baddy.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
-            RegisterDependencies();
-            LoadApplication(new App());
+
+            var container = RegisterDependencies();
+
+            var appContext = container.Resolve<IAppContext>();
+            appContext.Container = container;
+
+            LoadApplication(new App(appContext));
 
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>()
             .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
@@ -38,7 +44,7 @@ namespace Baddy.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        private void RegisterDependencies()
+        private UnityContainer RegisterDependencies()
         {
             var container = new UnityContainer();
 
@@ -47,6 +53,8 @@ namespace Baddy.Droid
             var unityServiceLocator = new UnityServiceLocator(container);
 
             ServiceLocator.SetLocatorProvider(() => unityServiceLocator);
+
+            return container;
         }
     }
 }

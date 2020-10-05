@@ -9,6 +9,13 @@ namespace Baddy.Services
 {
     public class NavigationService : INavigationService
     {
+        private readonly IAppContext _appContext;
+
+        public NavigationService(IAppContext appContext)
+        {
+            _appContext = appContext;
+        }
+
         public Task CloseMenu()
         {
             var currentMaster = (MasterDetailPage)Application.Current.MainPage;
@@ -24,7 +31,7 @@ namespace Baddy.Services
             switch (typeof(T))
             {
                 case Type model when model == typeof(AboutViewModel):
-                    currentMaster.Detail = new NavigationPage(new AboutPage());
+                    currentMaster.Detail = new NavigationPage(new AboutPage(_appContext));
                     break;
                 case Type model when model == typeof(LoginViewModel):
                     currentMaster.Detail = new NavigationPage(new LoginPage());
@@ -36,6 +43,22 @@ namespace Baddy.Services
                     await currentMaster.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
                     break;
             }
+        }
+
+        public Task NavigateToHome()
+        {
+            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
+            currentMaster.Detail = new NavigationPage(new AboutPage(_appContext));
+
+            return Task.CompletedTask;
+        }
+
+        public Task RefreshMenu()
+        {
+            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
+            currentMaster.Master = new MenuPage();
+
+            return Task.CompletedTask;
         }
     }
 }

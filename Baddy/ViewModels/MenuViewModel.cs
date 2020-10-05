@@ -1,5 +1,7 @@
-﻿using Baddy.Interfaces;
+﻿using Baddy.Enums;
+using Baddy.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using MenuItem = Baddy.Models.MenuItem;
 
 namespace Baddy.ViewModels
@@ -11,9 +13,18 @@ namespace Baddy.ViewModels
         public MenuViewModel(
             IAppContext appContext,
             INavigationService navigationService,
-            IMenuService menuService) : base(appContext, navigationService)
+            IMenuService menuService,
+            IStorageService storageService) : base(appContext, navigationService, storageService)
         {
-            MenuItems = menuService.GetMenuItems();
+            SetMenuItems(menuService.GetMenuItems());
+        }
+
+        private void SetMenuItems(IEnumerable<MenuItem> menuItems)
+        {
+            if (_appContext.LoggedIn)
+                MenuItems = menuItems.Where(m => m.Visibility != MenuItemVisibility.Anonymous);
+            else
+                MenuItems = menuItems.Where(m => m.Visibility != MenuItemVisibility.LoggedIn);
         }
     }
 }

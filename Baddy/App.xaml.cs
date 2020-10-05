@@ -1,18 +1,19 @@
 ﻿using Xamarin.Forms;
 using Baddy.Views;
 using Baddy.Styles;
+using Baddy.Interfaces;
 
 namespace Baddy
 {
     public partial class App : Application
     {
-        public App()
+        public App(IAppContext appContext)
         {
             InitializeComponent();
 
             SetStyles();
 
-            MainPage = new MainPage();
+            MainPage = new MainPage(appContext);
         }
 
         protected override void OnStart()

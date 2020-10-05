@@ -1,5 +1,7 @@
-﻿using Baddy.Interfaces;
+﻿using Baddy.Helpers;
+using Baddy.Interfaces;
 using Baddy.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Baddy.ViewModels
@@ -14,7 +16,8 @@ namespace Baddy.ViewModels
         public ProfileViewModel(
             IAppContext appContext,
             INavigationService navigationService,
-            IProfileService profileService) : base(appContext, navigationService)
+            IProfileService profileService,
+            IStorageService storageService) : base(appContext, navigationService, storageService)
         {
             Title = "Profile";
             _profileService = profileService;
@@ -27,8 +30,25 @@ namespace Baddy.ViewModels
 
         private async Task SetProfile()
         {
-            Profile = await _profileService.Get();
-            _appContext.Profile = Profile;
+            IsBusy = true;
+
+            try
+            {
+                Profile = await _profileService.Get();
+                _appContext.Profile = Profile;
+            }
+            catch (HttpException ex)
+            {
+                Error = ExceptionHelper.Handle(ex);
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

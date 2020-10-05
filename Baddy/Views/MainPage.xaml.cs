@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Baddy.Enums;
+using Baddy.Interfaces;
+using System.ComponentModel;
 using Xamarin.Forms;
 
 namespace Baddy.Views
@@ -8,13 +10,13 @@ namespace Baddy.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
     {
-        public MainPage()
+        public MainPage(IAppContext appContext)
         {
             InitializeComponent();
 
             MasterBehavior = MasterBehavior.Popover;
 
-            Detail = new NavigationPage(new AboutPage());
+            Detail = new NavigationPage(new AboutPage(appContext, AppState.Initialize));
         }
     }
 }

@@ -10,11 +10,14 @@ namespace Baddy.Services
     public class MenuService : IMenuService
     {
         private readonly INavigationService _navigationService;
+        private readonly IAuthService _authService;
 
         public MenuService(
-            INavigationService navigationService)
+            INavigationService navigationService,
+            IAuthService authService)
         {
             _navigationService = navigationService;
+            _authService = authService;
         }
 
         public IEnumerable<MenuItem> GetMenuItems()
@@ -23,7 +26,18 @@ namespace Baddy.Services
             {
                 new MenuItem
                 {
+                    Action = MenuAction.Home,
+                    Name = MenuConstants.Home,
+                    Handler = async () =>
+                    {
+                        await _navigationService.CloseMenu();
+                        await _navigationService.NavigateToHome();
+                    }
+                },
+                new MenuItem
+                {
                     Action = MenuAction.Login,
+                    Visibility = MenuItemVisibility.Anonymous,
                     Name = MenuConstants.Login,
                     Handler = async () => 
                     {
@@ -33,14 +47,31 @@ namespace Baddy.Services
                 },
                 new MenuItem
                 {
-                    Action = MenuAction.Logout,
-                    Name = MenuConstants.Logout,
+                    Action = MenuAction.Profile,
+                    Visibility = MenuItemVisibility.LoggedIn,
+                    Name = MenuConstants.Profile,
                     Handler = async () =>
                     {
                         await _navigationService.CloseMenu();
-                        await _navigationService.NavigateTo<AboutViewModel>();
+                        await _navigationService.NavigateTo<ProfileViewModel>();
                     }
-                }
+                },
+                new MenuItem
+                {
+                    Action = MenuAction.Logout,
+                    Visibility = MenuItemVisibility.LoggedIn,
+                    Name = MenuConstants.Logout,
+                    Handler = async () =>
+                    {
+                        _authService.Logoff();
+
+                        await _navigationService.CloseMenu();
+                        
+                        await _navigationService.RefreshMenu();
+
+                        await _navigationService.NavigateToHome();
+                    }
+                },
             };
         }
     }

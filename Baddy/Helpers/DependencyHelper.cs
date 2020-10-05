@@ -17,6 +17,7 @@ namespace Baddy.Helpers
             container.RegisterType<IMenuService, MenuService>(new ContainerControlledLifetimeManager());
             container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
             container.RegisterType<IProfileService, ProfileService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IStorageService, StorageService>(new ContainerControlledLifetimeManager());
         }
     }
 }

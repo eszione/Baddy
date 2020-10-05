@@ -11,22 +11,29 @@
                        Style="{StaticResource ErrorMessage}" 
                        IsVisible="{Binding Error, Converter={StaticResource NotEmptyStringToBool}}" />
                 <Label Text="Card number" />
-                <Entry Text="{Binding CardNumber}">
+                <Entry x:Name="CardNumber" Text="{Binding CardNumber}">
                     <Entry.Behaviors>
-                        <behaviors:EntryCompletedBehaviour EntryCompletedCommand="{Binding LoginCommand}"/>
+                        <behaviors:EntryFocusedBehaviour NextFocusedElement="PinNumber" />
                     </Entry.Behaviors>
                 </Entry>
                 <Label Text="Pin number" />
-                <Entry Text="{Binding PinNumber}">
+                <Entry x:Name="PinNumber" Text="{Binding PinNumber}">
                     <Entry.Behaviors>
                         <behaviors:EntryCompletedBehaviour EntryCompletedCommand="{Binding LoginCommand}"/>
                     </Entry.Behaviors>
                 </Entry>
+                <Label Text="Remember me" />
+                <CheckBox IsChecked="{Binding RememberMe}" />
                 <Button Text="Login"
                         Command="{Binding LoginCommand}"
                         BackgroundColor="{StaticResource Primary}"
                         TextColor="White" />
             </StackLayout>
         </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Green"
+                           HeightRequest="40"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand" />
     </Grid>
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using Baddy.Helpers;
+﻿using Baddy.Constants;
+using Baddy.Helpers;
 using Baddy.Interfaces;
 using Baddy.Models;
 using System;
@@ -36,12 +37,23 @@ namespace Baddy.ViewModels
             }
         }
 
+        private bool rememberMe;
+        public bool RememberMe
+        {
+            get => rememberMe;
+            set
+            {
+                SetProperty(ref rememberMe, value);
+            }
+        }
+
         private readonly IAuthService _authService;
 
         public LoginViewModel(
             IAppContext appContext,
             INavigationService navigationService,
-            IAuthService authService) : base(appContext, navigationService)
+            IAuthService authService,
+            IStorageService storageService) : base(appContext, navigationService, storageService)
         {
             _authService = authService;
             Title = "Login";
@@ -49,12 +61,16 @@ namespace Baddy.ViewModels
         }
 
         private bool CanLogin =>
+            !IsBusy &&
             !string.IsNullOrWhiteSpace(CardNumber) && 
             !string.IsNullOrWhiteSpace(PinNumber) && 
             PinNumber.Length > 1;
 
         private async Task Login()
         {
+            IsBusy = true;
+            LoginCommand.ChangeCanExecute();
+
             try
             {
                 Error = string.Empty;
@@ -68,7 +84,11 @@ namespace Baddy.ViewModels
                 if (!_appContext.LoggedIn)
                     throw new HttpException(HttpStatusCode.Unauthorized);
 
-                await _navigationService.NavigateTo<ProfileViewModel>();
+                await HandleRememberMe();
+
+                await _navigationService.RefreshMenu();
+
+                await _navigationService.NavigateToHome();
             }
             catch (HttpException ex)
             {
@@ -77,6 +97,25 @@ namespace Baddy.ViewModels
             catch (Exception ex)
             {
                 Error = ex.Message;
+            }
+            finally
+            {
+                IsBusy = false;
+                LoginCommand.ChangeCanExecute();
+            }
+        }
+
+        private async Task HandleRememberMe()
+        {
+            if (RememberMe)
+            {
+                await _storageService.SaveKey(PropertyConstants.CardNumber, CardNumber);
+                await _storageService.SaveKey(PropertyConstants.PinNumber, PinNumber);
+            }
+            else
+            {
+                await _storageService.DeleteKey(PropertyConstants.CardNumber);
+                await _storageService.DeleteKey(PropertyConstants.PinNumber);
             }
         }
     }

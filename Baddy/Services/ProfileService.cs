@@ -10,7 +10,8 @@ namespace Baddy.Services
     {
         private readonly IHttpService _httpService;
 
-        public ProfileService(IHttpService httpService)
+        public ProfileService(
+            IHttpService httpService)
         {
             _httpService = httpService;
         }
