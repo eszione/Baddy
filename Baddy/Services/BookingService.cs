@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Baddy.Constants;
+using Baddy.Helpers;
 using Baddy.Interfaces;
 using Baddy.Models;
+using Baddy.Models.Apis;
 
 namespace Baddy.Services
 {
@@ -38,16 +42,22 @@ namespace Baddy.Services
             return await _httpService.Post<BookingConfirmation>(parameters, UrlConstants.Main);
         }
 
-        public async Task<BookingConfirmed> Create()
+        public async Task<BookingConfirmed> Create(IEnumerable<CreateBookingInfo> bookings)
         {
+            var booking = bookings.First();
+
+            var minuteHour = DateTimeHelper.MinutesRounder(booking.Date.Minute);
+            var timeStart = (int)((booking.Date.Hour + minuteHour) * 60);
+            var price = PriceHelper.Calculate(booking.Date, booking.Duration);
+
             var parameters = new[]
             {
                 new KeyValuePair<string, string>("function", "booking_finish"),
                 new KeyValuePair<string, string>("sport_court", "A"),
-                new KeyValuePair<string, string>("date", "2020 09 11"),
-                new KeyValuePair<string, string>("bookings", "960,2,60,1300,2020 09 11")
+                new KeyValuePair<string, string>("date", $"{booking.Date:yyyy MM dd}"),
+                new KeyValuePair<string, string>("bookings", $"{timeStart},{booking.Court},{booking.Duration},{price},{booking.Date:yyyy MM dd}")
             };
-
+            throw new Exception("ex");
             return await _httpService.Post<BookingConfirmed>(parameters, UrlConstants.Main);
         }
 

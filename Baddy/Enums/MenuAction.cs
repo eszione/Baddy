@@ -2,6 +2,7 @@
 {
     public enum MenuAction
     {
+        CreateBooking,
         Home,
         Login,
         Logout,

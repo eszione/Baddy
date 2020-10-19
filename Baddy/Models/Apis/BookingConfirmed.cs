@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Baddy.Models
+namespace Baddy.Models.Apis
 {
     public class BookingConfirmed
     {

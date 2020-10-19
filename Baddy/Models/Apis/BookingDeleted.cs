@@ -1,17 +1,21 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Baddy.Models
+namespace Baddy.Models.Apis
 {
-    public class Booking
+    public class BookingDeleted
     {
         [JsonProperty("result")]
-        public string Result { get; set; }
+        public bool Result { get; set; }
         [JsonProperty("data")]
-        public IList<BookingData> Data { get; set; }
+        public List<DeleteData> BookingData { get; set; }
+        [JsonProperty("paging")]
+        public List<object> Paging { get; set; }
+        [JsonProperty("deleted")]
+        public List<DeleteMessage> Deleted { get; set; }
     }
 
-    public class BookingData
+    public class DeleteData
     {
         [JsonProperty("date")]
         public string Date { get; set; }
@@ -37,5 +41,11 @@ namespace Baddy.Models
         public string RefundHours { get; set; }
         [JsonProperty("percent_refund")]
         public int PercentRefund { get; set; }
+    }
+
+    public class DeleteMessage
+    {
+        [JsonProperty("message")]
+        public string Message { get; set; }
     }
 }

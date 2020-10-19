@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Baddy.Views.CreateBookingPage"
+             Title="{Binding Title}">
+    <Grid>
+        <ScrollView>
+            <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+                <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding DateNow}" />
+                <TimePicker Time="{Binding SelectedTime}">
+                    <TimePicker.Format>hh:mm tt</TimePicker.Format>
+                </TimePicker>
+                <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
+                <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
+                <Button Text="Book" />
+            </StackLayout>
+        </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Green"
+                           HeightRequest="40"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand" />
+    </Grid>
+</ContentPage>

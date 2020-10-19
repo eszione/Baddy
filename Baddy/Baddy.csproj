@@ -28,6 +28,9 @@
     <Compile Update="Styles\ColourStyles.xaml.cs">
       <DependentUpon>ColourStyles.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\CreateBookingPage.xaml.cs">
+      <DependentUpon>CreateBookingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>

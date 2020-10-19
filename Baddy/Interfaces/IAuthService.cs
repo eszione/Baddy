@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Baddy.Models;
+using Baddy.Models.Apis;
 
 namespace Baddy.Interfaces
 {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Baddy.Constants;
 using Baddy.Interfaces;
 using Baddy.Models;
+using Baddy.Models.Apis;
 
 namespace Baddy.Services
 {

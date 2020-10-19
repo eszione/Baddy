@@ -1,4 +1,4 @@
-﻿namespace Baddy.Models
+﻿namespace Baddy.Models.Apis
 {
     public class LoginResult
     {

@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Baddy.Models;
+using Baddy.Models.Apis;
 
 namespace Baddy.Interfaces
 {
@@ -7,7 +10,7 @@ namespace Baddy.Interfaces
     {
         Task<Booking> Get();
         Task<BookingConfirmation> Confirm();
-        Task<BookingConfirmed> Create();
+        Task<BookingConfirmed> Create(IEnumerable<CreateBookingInfo> bookings);
         Task<BookingDeleted> Delete(string bookingNumber);
     }
 }
