@@ -47,8 +47,9 @@ namespace Baddy.Services
             var booking = bookings.First();
 
             var minuteHour = DateTimeHelper.MinutesRounder(booking.Date.Minute);
+            var convertedDate = booking.Date.Date + new TimeSpan(booking.Date.Hour, (int)(minuteHour * 60), 0);
             var timeStart = (int)((booking.Date.Hour + minuteHour) * 60);
-            var price = PriceHelper.Calculate(booking.Date, booking.Duration);
+            var price = PriceHelper.Calculate(convertedDate, booking.Duration);
 
             var parameters = new[]
             {

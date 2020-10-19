@@ -2,10 +2,10 @@
 {
     public enum PricePerHour
     {
-        WeekdayAfternoon = 650,
-        WeekdayEvening = 750,
-        WeekdayMorning = 650,
-        WeedayMid = 400,
-        WeekendRate = 750
+        WeekdayAfternoon = 1300,
+        WeekdayEvening = 1500,
+        WeekdayMorning = 1300,
+        WeedayMid = 800,
+        WeekendRate = 1500
     }
 }
