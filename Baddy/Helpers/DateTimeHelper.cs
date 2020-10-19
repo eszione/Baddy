@@ -7,7 +7,7 @@
             if (minutes < 15)
                 return 0;
 
-            if (minutes >= 15 || minutes <= 44)
+            if (minutes >= 15 && minutes <= 44)
                 return 0.5;
 
             if (minutes > 44)

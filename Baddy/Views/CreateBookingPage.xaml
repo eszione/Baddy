@@ -12,7 +12,7 @@
                 </TimePicker>
                 <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
                 <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
-                <Button Text="Book" />
+                <Button Text="Book" Command="{Binding BookCommand}" />
             </StackLayout>
         </ScrollView>
         <ActivityIndicator IsRunning="{Binding IsBusy}"
