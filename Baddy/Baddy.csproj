@@ -14,6 +14,7 @@
     <PackageReference Include="CommonServiceLocator" Version="2.0.5" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="Unity" Version="5.11.7" />
     <PackageReference Include="Unity.Abstractions" Version="5.11.6" />
     <PackageReference Include="Unity.ServiceLocation" Version="5.11.1" />

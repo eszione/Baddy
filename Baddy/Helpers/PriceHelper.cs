@@ -25,7 +25,7 @@ namespace Baddy.Helpers
             var weekends = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday };
 
             if (weekends.Contains(startDate.DayOfWeek))
-                return ConvertDurationToPrice(duration, PricePerHour.WeekendRate);
+                return ConvertDurationToPrice(PricePerHour.WeekendRate, duration);
 
             var startTime = ConvertMinutes(startDate.Hour, startDate.Minute);
             var endDate = startDate.AddMinutes(duration);
@@ -33,95 +33,95 @@ namespace Baddy.Helpers
 
             // Early
             if (endTime <= ConvertMinutes(12, 0))
-                return ConvertDurationToPrice(duration, PricePerHour.WeekdayMorning);
+                return ConvertDurationToPrice(PricePerHour.WeekdayMorning, duration);
 
             // Overlap of early and mid
             if (startTime < ConvertMinutes(12, 0) && endTime <= ConvertMinutes(16, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime },
-                        { PricePerHour.WeedayMid, endTime - ConvertMinutes(12, 0) }
+                        (PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime),
+                        (PricePerHour.WeedayMid, endTime - ConvertMinutes(12, 0))
                     }
                 );
 
             // Overlap of early, mid and afternoon
             if (startTime < ConvertMinutes(12, 0) && endTime > ConvertMinutes(16, 0) && endTime <= ConvertMinutes(18, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime },
-                        { PricePerHour.WeedayMid, ConvertMinutes(16, 0) - ConvertMinutes(12, 0) },
-                        { PricePerHour.WeekdayAfternoon, endTime - ConvertMinutes(16, 0) }
+                        (PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime),
+                        (PricePerHour.WeedayMid, ConvertMinutes(16, 0) - ConvertMinutes(12, 0)),
+                        (PricePerHour.WeekdayAfternoon, endTime - ConvertMinutes(16, 0))
                     }
                 );
 
             // Overlap of early, mid, afternoon and evening
             if (startTime < ConvertMinutes(12, 0) && endTime > ConvertMinutes(18, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime },
-                        { PricePerHour.WeedayMid, ConvertMinutes(16, 0) - ConvertMinutes(12, 0) },
-                        { PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - ConvertMinutes(16, 0) },
-                        { PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0) }
+                        (PricePerHour.WeekdayMorning, ConvertMinutes(12, 0) - startTime),
+                        (PricePerHour.WeedayMid, ConvertMinutes(16, 0) - ConvertMinutes(12, 0)),
+                        (PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - ConvertMinutes(16, 0)),
+                        (PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0))
                     }
                 );
 
             // Mid
             if (startTime >= ConvertMinutes(12, 0) && endTime <= ConvertMinutes(16, 0))
-                return ConvertDurationToPrice(duration, PricePerHour.WeedayMid);
+                return ConvertDurationToPrice(PricePerHour.WeedayMid, duration);
 
             // Overlap of mid and afternoon
             if (startTime >= ConvertMinutes(12, 0) && startTime < ConvertMinutes(16, 0) && endTime <= ConvertMinutes(18, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeedayMid, ConvertMinutes(16, 0) - startTime },
-                        { PricePerHour.WeekdayAfternoon, endTime - ConvertMinutes(16, 0) }
+                        (PricePerHour.WeedayMid, ConvertMinutes(16, 0) - startTime),
+                        (PricePerHour.WeekdayAfternoon, endTime - ConvertMinutes(16, 0))
                     }
                 );
 
             // Overlap of mid, afternoon and evening
             if (startTime >= ConvertMinutes(12, 0) && startTime < ConvertMinutes(16, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeedayMid, ConvertMinutes(16, 0) - startTime },
-                        { PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - ConvertMinutes(16, 0) },
-                        { PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0) }
+                        (PricePerHour.WeedayMid, ConvertMinutes(16, 0) - startTime),
+                        (PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - ConvertMinutes(16, 0)),
+                        (PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0))
                     }
                 );
 
             // Afternoon
             if (startTime >= ConvertMinutes(16, 0) && endTime <= ConvertMinutes(18, 0))
-                return ConvertDurationToPrice(duration, PricePerHour.WeekdayAfternoon);
+                return ConvertDurationToPrice(PricePerHour.WeekdayAfternoon, duration);
 
             // Overlap of afternoon and evening
             if (startTime >= ConvertMinutes(16, 0) && startTime < ConvertMinutes(18, 0) && endTime > ConvertMinutes(18, 0))
                 return ConvertDurationsToPrice(
-                    new Dictionary<PricePerHour, int>
+                    new List<(PricePerHour, int)>
                     {
-                        { PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - startTime },
-                        { PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0) }
+                        (PricePerHour.WeekdayAfternoon, ConvertMinutes(18, 0) - startTime),
+                        (PricePerHour.WeekdayEvening, endTime - ConvertMinutes(18, 0))
                     }
                 );
 
             // Evening
             if (startTime >= ConvertMinutes(18, 0))
-                return ConvertDurationToPrice(duration, PricePerHour.WeekdayEvening);
+                return ConvertDurationToPrice(PricePerHour.WeekdayEvening, duration);
 
             return 0;
         }
 
-        private static int ConvertDurationToPrice(int duration, PricePerHour price)
+        private static int ConvertDurationToPrice(PricePerHour price, int duration)
         {
             return (int)(duration / (double)60 * (int)price);
         }
 
-        private static int ConvertDurationsToPrice(Dictionary<PricePerHour, int> mappings)
+        private static int ConvertDurationsToPrice(IEnumerable<(PricePerHour price, int duration)> mappings)
         {
-            return mappings.Sum(mapping => ConvertDurationToPrice(mapping.Value, mapping.Key));
+            return mappings.Sum(mapping => ConvertDurationToPrice(mapping.price, mapping.duration));
         }
 
         private static int ConvertMinutes(int hour, int minute)
