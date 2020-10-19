@@ -49,7 +49,16 @@ namespace Baddy.ViewModels
 
         public int SelectedCourt { get; set; }
 
-        public int SelectedDuration { get; set; }
+        private int selectedDuration;
+        public int SelectedDuration 
+        {
+            get => selectedDuration;
+            set
+            {
+                selectedDuration = value;
+                BookCommand.ChangeCanExecute();
+            }
+        }
 
         public bool NavigateAway;
 
