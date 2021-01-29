@@ -18,7 +18,7 @@ namespace Baddy.Services
 
         public Task CloseMenu()
         {
-            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
+            var currentMaster = (FlyoutPage)Application.Current.MainPage;
             currentMaster.IsPresented = false;
 
             return Task.CompletedTask;
@@ -26,7 +26,7 @@ namespace Baddy.Services
 
         public async Task NavigateTo<T>(params object[] parameters)
         {
-            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
+            var currentMaster = (FlyoutPage)Application.Current.MainPage;
 
             switch (typeof(T))
             {
@@ -56,7 +56,7 @@ namespace Baddy.Services
 
         public Task NavigateToHome()
         {
-            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
+            var currentMaster = (FlyoutPage)Application.Current.MainPage;
             currentMaster.Detail = new NavigationPage(new AboutPage(_appContext));
 
             return Task.CompletedTask;
@@ -64,8 +64,8 @@ namespace Baddy.Services
 
         public Task RefreshMenu()
         {
-            var currentMaster = (MasterDetailPage)Application.Current.MainPage;
-            currentMaster.Master = new MenuPage();
+            var currentMaster = (FlyoutPage)Application.Current.MainPage;
+            currentMaster.Flyout = new MenuPage();
 
             return Task.CompletedTask;
         }
