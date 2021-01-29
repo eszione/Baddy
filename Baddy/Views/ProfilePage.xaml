@@ -4,33 +4,35 @@
              x:Class="Baddy.Views.ProfilePage"
              Title="{Binding Title}">
     <Grid>
-        <ScrollView>
-            <StackLayout Orientation="Vertical">
-                <Label Text="{Binding Error}" 
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ScrollView>
+                <StackLayout Orientation="Vertical" Padding="10">
+                    <Label Text="{Binding Error}" 
                        Style="{StaticResource ErrorMessage}" 
                        IsVisible="{Binding Error, Converter={StaticResource NotEmptyStringToBool}}" />
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Name: " />
-                    <Label Text="{Binding Profile.Name}" />
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Name: " />
+                        <Label Text="{Binding Profile.Name}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Email: " />
+                        <Label Text="{Binding Profile.Email}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Phone: " />
+                        <Label Text="{Binding Profile.Mobile}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Card Balance: " />
+                        <Label Text="{Binding Profile.Balance}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Card Expiry: " />
+                        <Label Text="{Binding Profile.CardExpiry}" />
+                    </StackLayout>
                 </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Email: " />
-                    <Label Text="{Binding Profile.Email}" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Phone: " />
-                    <Label Text="{Binding Profile.Mobile}" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Card Balance: " />
-                    <Label Text="{Binding Profile.Balance}" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Card Expiry: " />
-                    <Label Text="{Binding Profile.CardExpiry}" />
-                </StackLayout>
-            </StackLayout>
-        </ScrollView>
+            </ScrollView>
+        </RefreshView>
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            Color="Green"
                            HeightRequest="40"

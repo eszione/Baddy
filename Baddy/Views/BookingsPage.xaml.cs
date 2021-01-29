@@ -4,20 +4,20 @@ using Xamarin.Forms;
 
 namespace Baddy.Views
 {
-    public partial class ProfilePage : ContentPage
+    public partial class BookingsPage : ContentPage
     {
-        public ProfilePage()
+        public BookingsPage()
         {
             InitializeComponent();
 
-            BindingContext = ServiceLocator.Current.GetInstance<ProfileViewModel>();
+            BindingContext = ServiceLocator.Current.GetInstance<BookingsViewModel>();
         }
 
         protected async override void OnAppearing()
         {
             base.OnAppearing();
 
-            await ((ProfileViewModel)BindingContext).SetProfile();
+            await ((BookingsViewModel)BindingContext).SetBookings();
         }
     }
 }

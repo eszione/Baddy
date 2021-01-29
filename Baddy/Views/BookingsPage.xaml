@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Baddy.Views.BookingsPage"
+             Title="{Binding Title}"
+             x:Name="BookingsRef">
+    <Grid>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <ListView ItemsSource="{Binding Bookings}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Margin="0, 0, 0, 10" Padding="10">
+                                <StackLayout Orientation="Vertical">
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Date}" />
+                                                <Span Text=" " />
+                                                <Span Text="{Binding Time}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Court}" />
+                                                <Span Text=", " />
+                                                <Span Text="{Binding Duration}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="{Binding Amount}"/>
+                                    <Label Text="{Binding Status}"/>
+                                </StackLayout>
+                                <StackLayout HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand">
+                                    <Image Source="trash.jpg" HeightRequest="50">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference BookingsRef}}" CommandParameter="{Binding BookingNo}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </RefreshView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="Green"
+                           HeightRequest="40"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand" />
+    </Grid>
+</ContentPage>

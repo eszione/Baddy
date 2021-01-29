@@ -3,6 +3,7 @@ using Baddy.Interfaces;
 using Baddy.Models;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Baddy.ViewModels
 {
@@ -22,13 +23,10 @@ namespace Baddy.ViewModels
             Title = "Profile";
             _profileService = profileService;
 
-            Task.Run(async () =>
-            {
-                await SetProfile();
-            });
+            RefreshCommand = new Command(async() => await Refresh());
         }
 
-        private async Task SetProfile()
+        public async Task SetProfile()
         {
             IsBusy = true;
 
@@ -49,6 +47,15 @@ namespace Baddy.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        public async Task Refresh()
+        {
+            IsRefreshing = true;
+
+            await SetProfile();
+
+            IsRefreshing = false;
         }
     }
 }

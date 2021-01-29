@@ -58,6 +58,17 @@ namespace Baddy.Services
                 },
                 new MenuItem
                 {
+                    Action = MenuAction.Bookings,
+                    Visibility = MenuItemVisibility.LoggedIn,
+                    Name = MenuConstants.Bookings,
+                    Handler = async () =>
+                    {
+                        await _navigationService.CloseMenu();
+                        await _navigationService.NavigateTo<BookingsViewModel>();
+                    }
+                },
+                new MenuItem
+                {
                     Action = MenuAction.CreateBooking,
                     Visibility = MenuItemVisibility.LoggedIn,
                     Name = MenuConstants.CreateBooking,
@@ -65,6 +76,17 @@ namespace Baddy.Services
                     {
                         await _navigationService.CloseMenu();
                         await _navigationService.NavigateTo<CreateBookingViewModel>();
+                    }
+                },
+                new MenuItem
+                {
+                    Action = MenuAction.ScheduleBooking,
+                    Visibility = MenuItemVisibility.LoggedIn,
+                    Name = MenuConstants.ScheduleBooking,
+                    Handler = async () =>
+                    {
+                        await _navigationService.CloseMenu();
+                        await _navigationService.NavigateTo<ScheduleBookingViewModel>();
                     }
                 },
                 new MenuItem

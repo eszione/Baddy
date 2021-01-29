@@ -6,13 +6,13 @@ using CommonServiceLocator;
 namespace Baddy.Views
 {
     [DesignTimeVisible(false)]
-    public partial class CreateBookingPage : ContentPage
+    public partial class ScheduleBookingPage : ContentPage
     {
-        public CreateBookingPage()
+        public ScheduleBookingPage()
         {
             InitializeComponent();
 
-            BindingContext = ServiceLocator.Current.GetInstance<CreateBookingViewModel>();
+            BindingContext = ServiceLocator.Current.GetInstance<ScheduleBookingViewModel>();
         }
 
         protected override void OnAppearing()
@@ -21,8 +21,10 @@ namespace Baddy.Views
 
             MessagingCenter.Subscribe<object>(this, "NavigateAway", (sender) =>
             {
-                ((CreateBookingViewModel)BindingContext).NavigateAway = true;
+                ((ScheduleBookingViewModel)BindingContext).NavigateAway = true;
             });
+
+            ((ScheduleBookingViewModel)BindingContext).SetScheduledDefaults();
         }
 
         protected override void OnDisappearing()

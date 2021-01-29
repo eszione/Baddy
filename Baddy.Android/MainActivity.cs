@@ -10,6 +10,9 @@ using CommonServiceLocator;
 using Unity.ServiceLocation;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Baddy.Interfaces;
+using Android.Content;
+using Baddy.Android.Services;
+using System;
 
 namespace Baddy.Droid
 {
@@ -35,6 +38,13 @@ namespace Baddy.Droid
 
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>()
             .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+
+            var alarmIntent = new Intent(this, typeof(BackgroundReceiver));
+
+            var pending = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
+
+            var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
+            alarmManager.SetRepeating(AlarmType.ElapsedRealtime, DateTime.Now.Millisecond + 2000, 2000, pending);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)

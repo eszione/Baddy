@@ -38,8 +38,8 @@ namespace Baddy.ViewModels
 
             try
             {
-                var cardNumber = _storageService.ReadKey(PropertyConstants.CardNumber);
-                var pinNumber = _storageService.ReadKey(PropertyConstants.PinNumber);
+                var cardNumber = _storageService.ReadKey<string>(PropertyConstants.CardNumber);
+                var pinNumber = _storageService.ReadKey<string>(PropertyConstants.PinNumber);
 
                 if (!string.IsNullOrWhiteSpace(cardNumber) && !string.IsNullOrWhiteSpace(pinNumber))
                 {

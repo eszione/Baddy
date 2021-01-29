@@ -6,8 +6,8 @@ namespace Baddy.Interfaces
     {
         Task DeleteKey(string key);
 
-        string ReadKey(string key);
+        T ReadKey<T>(string key);
 
-        Task SaveKey(string key, string value);   
+        Task SaveKey<T>(string key, T value);   
     }
 }

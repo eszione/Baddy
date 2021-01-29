@@ -40,7 +40,13 @@ namespace Baddy.Services
                     currentMaster.Detail = new NavigationPage(new ProfilePage());
                     break;
                 case Type model when model == typeof(CreateBookingViewModel):
-                    currentMaster.Detail = new NavigationPage(new CreateBookingPage(_appContext));
+                    currentMaster.Detail = new NavigationPage(new CreateBookingPage());
+                    break;
+                case Type model when model == typeof(BookingsViewModel):
+                    currentMaster.Detail = new NavigationPage(new BookingsPage());
+                    break;
+                case Type model when model == typeof(ScheduleBookingViewModel):
+                    currentMaster.Detail = new NavigationPage(new ScheduleBookingPage());
                     break;
                 default:
                     await currentMaster.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");

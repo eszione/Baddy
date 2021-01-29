@@ -1,4 +1,5 @@
 ﻿using Baddy.Interfaces;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -20,14 +21,33 @@ namespace Baddy.Services
             }
         }
 
-        public string ReadKey(string key)
-            => ContainsKey(key) ? Application.Current.Properties[key] as string : string.Empty;
+        public T ReadKey<T>(string key)
+        {
+            if (!ContainsKey(key))
+                return default;
 
-        public async Task SaveKey(string key, string value)
+            try
+            {
+                var stringValue = Application.Current.Properties[key].ToString();
+
+                return typeof(T).IsEnum
+                    ? (T)Enum.Parse(typeof(T), stringValue)
+                    : (T)Convert.ChangeType(stringValue, typeof(T));
+            } 
+            catch
+            {
+                return default;
+            }
+        }
+
+        public async Task SaveKey<T>(string key, T value)
         {
             try
             {
-                Application.Current.Properties[key] = value;
+                if (typeof(T) != typeof(int) || typeof(T) != typeof(string))
+                    Application.Current.Properties[key] = value.ToString();
+                else
+                    Application.Current.Properties[key] = value;
 
                 await Application.Current.SavePropertiesAsync();
             }
