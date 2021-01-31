@@ -3,6 +3,7 @@ using Baddy.Enums;
 using Baddy.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -24,13 +25,8 @@ namespace Baddy.ViewModels
             set
             {
                 SetProperty(ref isScheduled, value);
-                if (!value)
-                {
-                    SelectedBookingDay = default;
-                    SelectedBookingTime = default;
-                    SelectedDuration = default;
-                    SelectedCourt = default;
-                }
+                if (!value)             
+                    ResetDefaultBookingSettings();
             }
         }
 
@@ -134,8 +130,13 @@ namespace Baddy.ViewModels
             SelectedScheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
             SelectedBookingDay = _storageService.ReadKey<Days>(ScheduleConstants.BookingDay);
             SelectedBookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
-            SelectedDuration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
-            SelectedCourt = _storageService.ReadKey<int>(ScheduleConstants.Court);
+            SelectedDuration = GetDefaultInt(_storageService.ReadKey<int>(ScheduleConstants.BookingDuration), Durations.FirstOrDefault());
+            SelectedCourt = GetDefaultInt(_storageService.ReadKey<int>(ScheduleConstants.Court), Courts.FirstOrDefault());
+        }
+
+        private int GetDefaultInt(int currentValue, int defaultValue)
+        {
+            return currentValue == 0 ? defaultValue : currentValue;
         }
 
         private IEnumerable<int> GetCourts()
@@ -206,6 +207,14 @@ namespace Baddy.ViewModels
 
                 MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
             }
+        }
+
+        private void ResetDefaultBookingSettings()
+        {
+            SelectedBookingDay = default;
+            SelectedBookingTime = default;
+            SelectedDuration = Durations.FirstOrDefault();
+            SelectedCourt = Courts.FirstOrDefault();
         }
 
         private void Refresh()

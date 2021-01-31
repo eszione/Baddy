@@ -15,11 +15,11 @@
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Select a schedule day" VerticalTextAlignment="Center" />
-                            <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" />
+                            <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" HorizontalOptions="FillAndExpand" />
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Select a schedule time" VerticalTextAlignment="Center" />
-                            <TimePicker Time="{Binding SelectedScheduleTime}">
+                            <TimePicker Time="{Binding SelectedScheduleTime}" HorizontalOptions="FillAndExpand">
                                 <TimePicker.Format>hh:mm tt</TimePicker.Format>
                             </TimePicker>
                         </StackLayout>
@@ -27,17 +27,23 @@
                     <Label Text="Booking options" IsVisible="{Binding IsScheduled}" />
                     <StackLayout IsVisible="{Binding IsScheduled}" Padding="10">
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a booking day" VerticalTextAlignment="Center"/>
-                            <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" Title="Select a booking day" />
+                            <Label Text="Select a booking day" VerticalTextAlignment="Center" />
+                            <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" HorizontalOptions="FillAndExpand" />
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Select a booking time" VerticalTextAlignment="Center" />
-                            <TimePicker Time="{Binding SelectedBookingTime}">
+                            <TimePicker Time="{Binding SelectedBookingTime}" HorizontalOptions="FillAndExpand">
                                 <TimePicker.Format>hh:mm tt</TimePicker.Format>
                             </TimePicker>
                         </StackLayout>
-                        <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
-                        <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
+                        <StackLayout  Orientation="Horizontal">
+                            <Label Text="Select a duration" VerticalTextAlignment="Center" />
+                            <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" HorizontalOptions="FillAndExpand" />
+                        </StackLayout>
+                        <StackLayout  Orientation="Horizontal">
+                            <Label Text="Select a court" VerticalTextAlignment="Center" />
+                            <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" HorizontalOptions="FillAndExpand" />
+                        </StackLayout>
                     </StackLayout>
                     <Button Text="Schedule" Command="{Binding ScheduleCommand}" />
                 </StackLayout>
