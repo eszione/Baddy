@@ -9,5 +9,7 @@
         public const string ScheduleDay = "ScheduleDay";
         public const string ScheduleTime = "ScheduleTime";
         public const string ScheduleToggleOnOff = "ScheduleToggleOnOff";
+        public const string StartScheduler = "StartScheduler";
+        public const string StopScheduler = "StopScheduler";
     }
 }

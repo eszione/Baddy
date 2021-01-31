@@ -13,6 +13,7 @@ using Baddy.Interfaces;
 using Android.Content;
 using Baddy.Android.Services;
 using Baddy.Droid.Helpers;
+using Baddy.Constants;
 
 namespace Baddy.Droid
 {
@@ -39,10 +40,7 @@ namespace Baddy.Droid
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>()
             .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
 
-            // Check if have scheduler, then schedule
-            var intent = new Intent(this, typeof(Scheduler));
-
-            SchedulerHelper.Schedule(this, intent, 5);
+            SetupScheduler(container);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
@@ -63,6 +61,36 @@ namespace Baddy.Droid
             ServiceLocator.SetLocatorProvider(() => unityServiceLocator);
 
             return container;
+        }
+
+        private void SetupScheduler(IUnityContainer container)
+        {
+            if (container.Resolve<IStorageService>().ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff))
+                StartScheduler();
+
+            MessagingCenter.Subscribe<object>(this, ScheduleConstants.StartScheduler, (sender) =>
+            {
+                StartScheduler();
+            });
+
+            MessagingCenter.Subscribe<object>(this, ScheduleConstants.StopScheduler, (sender) =>
+            {
+                StopScheduler();
+            });
+        }
+
+        private void StartScheduler()
+        {
+            var intent = new Intent(this, typeof(Scheduler));
+
+            SchedulerHelper.StartScheduler(this, intent, 5);
+        }
+
+        private void StopScheduler()
+        {
+            var intent = new Intent(this, typeof(Scheduler));
+
+            SchedulerHelper.StopScheduler(this, intent);
         }
     }
 }

@@ -6,23 +6,32 @@
     <Grid>
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <ScrollView>
-                <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
-                    <StackLayout>
-                        <Label Text="Schedule options" />
-                        <Switch IsToggled="{Binding IsScheduled}" />
-                        <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" Title="Select a schedule day"/>
+                <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="10">
+                    <Label Text="Schedule options" />
+                    <StackLayout Padding="10">
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a schedule time" />
-                            <TimePicker Time="{Binding SelectedTime}">
+                            <Label Text="Schedule on/off"/>
+                            <Switch IsToggled="{Binding IsScheduled}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select a schedule day" VerticalTextAlignment="Center" />
+                            <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select a schedule time" VerticalTextAlignment="Center" />
+                            <TimePicker Time="{Binding SelectedScheduleTime}">
                                 <TimePicker.Format>hh:mm tt</TimePicker.Format>
                             </TimePicker>
                         </StackLayout>
                     </StackLayout>
-                    <StackLayout IsVisible="{Binding IsScheduled}">
-                        <Label Text="Court options" />
-                        <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" Title="Select a booking day" />
+                    <Label Text="Booking options" IsVisible="{Binding IsScheduled}" />
+                    <StackLayout IsVisible="{Binding IsScheduled}" Padding="10">
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a booking time" />
+                            <Label Text="Select a booking day" VerticalTextAlignment="Center"/>
+                            <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" Title="Select a booking day" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select a booking time" VerticalTextAlignment="Center" />
                             <TimePicker Time="{Binding SelectedBookingTime}">
                                 <TimePicker.Format>hh:mm tt</TimePicker.Format>
                             </TimePicker>

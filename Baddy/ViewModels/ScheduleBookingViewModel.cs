@@ -192,7 +192,7 @@ namespace Baddy.ViewModels
                 await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
 
-                // Create scheduler
+                MessagingCenter.Send<object>(this, ScheduleConstants.StartScheduler);
             }
             else
             {
@@ -203,6 +203,8 @@ namespace Baddy.ViewModels
                 await _storageService.DeleteKey(ScheduleConstants.BookingTime);
                 await _storageService.DeleteKey(ScheduleConstants.BookingDuration);
                 await _storageService.DeleteKey(ScheduleConstants.Court);
+
+                MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
             }
         }
 

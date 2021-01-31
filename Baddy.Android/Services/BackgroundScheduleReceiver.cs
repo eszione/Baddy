@@ -33,7 +33,7 @@ namespace Baddy.Android.Services
                 Console.WriteLine(DateTimeHelper.NextScheduledDate(DateTime.Now, day, time));
             }
 
-            SchedulerHelper.Schedule(context, intent, 5);
+            SchedulerHelper.StartScheduler(context, intent, 5);
         }
     }
 }
