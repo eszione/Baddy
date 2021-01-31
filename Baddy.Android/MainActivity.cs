@@ -12,11 +12,11 @@ using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Baddy.Interfaces;
 using Android.Content;
 using Baddy.Android.Services;
-using System;
+using Baddy.Droid.Helpers;
 
 namespace Baddy.Droid
 {
-    [Activity(Label = "Baddy", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Badcrew", Icon = "@mipmap/badcrew", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -39,12 +39,10 @@ namespace Baddy.Droid
             Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>()
             .UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
 
-            var alarmIntent = new Intent(this, typeof(BackgroundReceiver));
+            // Check if have scheduler, then schedule
+            var intent = new Intent(this, typeof(Scheduler));
 
-            var pending = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
-
-            var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
-            alarmManager.SetRepeating(AlarmType.ElapsedRealtime, DateTime.Now.Millisecond + 2000, 2000, pending);
+            SchedulerHelper.Schedule(this, intent, 5);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)

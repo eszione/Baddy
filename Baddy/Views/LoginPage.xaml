@@ -11,13 +11,13 @@
                        Style="{StaticResource ErrorMessage}" 
                        IsVisible="{Binding Error, Converter={StaticResource NotEmptyStringToBool}}" />
                 <Label Text="Card number" />
-                <Entry x:Name="CardNumber" Text="{Binding CardNumber}">
+                <Entry x:Name="CardNumber" Text="{Binding CardNumber}" Keyboard="Numeric">
                     <Entry.Behaviors>
                         <behaviors:EntryFocusedBehaviour NextFocusedElement="PinNumber" />
                     </Entry.Behaviors>
                 </Entry>
                 <Label Text="Pin number" />
-                <Entry x:Name="PinNumber" Text="{Binding PinNumber}">
+                <Entry x:Name="PinNumber" Text="{Binding PinNumber}" Keyboard="Numeric">
                     <Entry.Behaviors>
                         <behaviors:EntryCompletedBehaviour EntryCompletedCommand="{Binding LoginCommand}"/>
                     </Entry.Behaviors>

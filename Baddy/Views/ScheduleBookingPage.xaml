@@ -7,10 +7,29 @@
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <ScrollView>
                 <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
-                    <Picker ItemsSource="{Binding Days}" SelectedItem="{Binding SelectedDay}" Title="Select a day"/>
-                    <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
-                    <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
-                    <Switch IsToggled="{Binding IsScheduled}" />
+                    <StackLayout>
+                        <Label Text="Schedule options" />
+                        <Switch IsToggled="{Binding IsScheduled}" />
+                        <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" Title="Select a schedule day"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select a schedule time" />
+                            <TimePicker Time="{Binding SelectedTime}">
+                                <TimePicker.Format>hh:mm tt</TimePicker.Format>
+                            </TimePicker>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout IsVisible="{Binding IsScheduled}">
+                        <Label Text="Court options" />
+                        <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" Title="Select a booking day" />
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Select a booking time" />
+                            <TimePicker Time="{Binding SelectedBookingTime}">
+                                <TimePicker.Format>hh:mm tt</TimePicker.Format>
+                            </TimePicker>
+                        </StackLayout>
+                        <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
+                        <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
+                    </StackLayout>
                     <Button Text="Schedule" Command="{Binding ScheduleCommand}" />
                 </StackLayout>
             </ScrollView>

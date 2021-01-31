@@ -10,63 +10,11 @@ namespace Baddy.ViewModels
 {
     public class ScheduleBookingViewModel : BaseViewModel
     {
-        public Command ScheduleCommand { get; set; }
-
         private DateTime dateNow;
         public DateTime DateNow
         {
             get => dateNow;
             set => SetProperty(ref dateNow, value);
-        }
-
-        private IEnumerable<Days> days;
-        public IEnumerable<Days> Days
-        {
-            get => days;
-            set => SetProperty(ref days, value);
-        }
-
-        private IEnumerable<int> courts;
-        public IEnumerable<int> Courts
-        {
-            get => courts;
-            set => SetProperty(ref courts, value);
-        }
-
-        private IEnumerable<int> durations;
-        public IEnumerable<int> Durations
-        {
-            get => durations;
-            set => SetProperty(ref durations, value);
-        }
-
-        private int selectedCourt;
-        public int SelectedCourt 
-        { 
-            get => selectedCourt;
-            set
-            {
-                SetProperty(ref selectedCourt, value);
-                ScheduleCommand.ChangeCanExecute();
-            }
-        }
-
-        private Days selectedDay;
-        public Days SelectedDay
-        {
-            get => selectedDay;
-            set => SetProperty(ref selectedDay, value);
-        }
-
-        private int selectedDuration;
-        public int SelectedDuration 
-        {
-            get => selectedDuration;
-            set
-            {
-                SetProperty(ref selectedDuration, value);
-                ScheduleCommand.ChangeCanExecute();
-            }
         }
 
         private bool isScheduled;
@@ -78,12 +26,85 @@ namespace Baddy.ViewModels
                 SetProperty(ref isScheduled, value);
                 if (!value)
                 {
-                    SelectedCourt = 0;
-                    SelectedDuration = 0;
-                    _ = Schedule();
+                    SelectedBookingDay = default;
+                    SelectedBookingTime = default;
+                    SelectedDuration = default;
+                    SelectedCourt = default;
                 }
             }
         }
+
+        private IEnumerable<Days> scheduleDays;
+        public IEnumerable<Days> ScheduleDays
+        {
+            get => scheduleDays;
+            set => SetProperty(ref scheduleDays, value);
+        }
+
+        private IEnumerable<Days> bookingDays;
+        public IEnumerable<Days> BookingDays
+        {
+            get => bookingDays;
+            set => SetProperty(ref bookingDays, value);
+        }
+
+        private IEnumerable<int> durations;
+        public IEnumerable<int> Durations
+        {
+            get => durations;
+            set => SetProperty(ref durations, value);
+        }
+
+        private IEnumerable<int> courts;
+        public IEnumerable<int> Courts
+        {
+            get => courts;
+            set => SetProperty(ref courts, value);
+        }
+
+        private Days selectedScheduleDay;
+        public Days SelectedScheduleDay
+        {
+            get => selectedScheduleDay;
+            set => SetProperty(ref selectedScheduleDay, value);
+        }
+
+        private TimeSpan selectedScheduleTime;
+        public TimeSpan SelectedScheduleTime
+        {
+            get => selectedScheduleTime;
+            set => SetProperty(ref selectedScheduleTime, value);
+        }
+
+        private Days selectedBookingDay;
+        public Days SelectedBookingDay
+        {
+            get => selectedBookingDay;
+            set => SetProperty(ref selectedBookingDay, value);
+        }
+
+        private TimeSpan selectedBookingTime;
+        public TimeSpan SelectedBookingTime
+        {
+            get => selectedBookingTime;
+            set => SetProperty(ref selectedBookingTime, value);
+        }
+
+        private int selectedDuration;
+        public int SelectedDuration 
+        {
+            get => selectedDuration;
+            set => SetProperty(ref selectedDuration, value);
+        }
+
+        private int selectedCourt;
+        public int SelectedCourt
+        {
+            get => selectedCourt;
+            set => SetProperty(ref selectedCourt, value);
+        }
+
+        public Command ScheduleCommand { get; set; }
 
         public bool NavigateAway;
 
@@ -95,24 +116,27 @@ namespace Baddy.ViewModels
             Title = "Schedule booking";
 
             DateNow = DateTime.Now;
-            Courts = GetCourts();
-            Days = GetDays();
+
+            ScheduleDays = GetDays();
+            BookingDays = GetDays();
             Durations = GetDurations();
+            Courts = GetCourts();
             StartTimer();
 
-            ScheduleCommand = new Command(async() => await Schedule(), () => CanSchedule);
+            ScheduleCommand = new Command(async() => await Schedule());
             RefreshCommand = new Command(() => Refresh());
         }
 
         public void SetScheduledDefaults()
         {
+            IsScheduled = _storageService.ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff);
+            SelectedScheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
+            SelectedScheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
+            SelectedBookingDay = _storageService.ReadKey<Days>(ScheduleConstants.BookingDay);
+            SelectedBookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
+            SelectedDuration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
             SelectedCourt = _storageService.ReadKey<int>(ScheduleConstants.Court);
-            SelectedDay = _storageService.ReadKey<Days>(ScheduleConstants.Day);
-            SelectedDuration = _storageService.ReadKey<int>(ScheduleConstants.Duration);
-            IsScheduled = _storageService.ReadKey<bool>(ScheduleConstants.Toggle);
         }
-
-        private bool CanSchedule => SelectedCourt > 0 && SelectedDuration > 0;
 
         private IEnumerable<int> GetCourts()
         {
@@ -126,13 +150,13 @@ namespace Baddy.ViewModels
         {
             return new List<Days>
             {
-                Enums.Days.Monday, 
-                Enums.Days.Tuesday, 
-                Enums.Days.Wednesday,
-                Enums.Days.Thursday,
-                Enums.Days.Friday,
-                Enums.Days.Saturday,
-                Enums.Days.Sunday
+                Days.Monday, 
+                Days.Tuesday, 
+                Days.Wednesday,
+                Days.Thursday,
+                Days.Friday,
+                Days.Saturday,
+                Days.Sunday
             };
         }
 
@@ -160,17 +184,25 @@ namespace Baddy.ViewModels
         {
             if (IsScheduled)
             {
+                await _storageService.SaveKey(ScheduleConstants.ScheduleToggleOnOff, IsScheduled);
+                await _storageService.SaveKey(ScheduleConstants.ScheduleDay, SelectedScheduleDay);
+                await _storageService.SaveKey(ScheduleConstants.ScheduleTime, SelectedScheduleTime);
+                await _storageService.SaveKey(ScheduleConstants.BookingDay, SelectedBookingDay);
+                await _storageService.SaveKey(ScheduleConstants.BookingTime, SelectedBookingTime);
+                await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
-                await _storageService.SaveKey(ScheduleConstants.Day, SelectedDay);
-                await _storageService.SaveKey(ScheduleConstants.Duration, SelectedDuration);
-                await _storageService.SaveKey(ScheduleConstants.Toggle, IsScheduled);
+
+                // Create scheduler
             }
             else
             {
+                await _storageService.DeleteKey(ScheduleConstants.ScheduleToggleOnOff);
+                await _storageService.DeleteKey(ScheduleConstants.ScheduleDay);
+                await _storageService.DeleteKey(ScheduleConstants.ScheduleTime);
+                await _storageService.DeleteKey(ScheduleConstants.BookingDay);
+                await _storageService.DeleteKey(ScheduleConstants.BookingTime);
+                await _storageService.DeleteKey(ScheduleConstants.BookingDuration);
                 await _storageService.DeleteKey(ScheduleConstants.Court);
-                await _storageService.DeleteKey(ScheduleConstants.Day);
-                await _storageService.DeleteKey(ScheduleConstants.Duration);
-                await _storageService.DeleteKey(ScheduleConstants.Toggle);
             }
         }
 

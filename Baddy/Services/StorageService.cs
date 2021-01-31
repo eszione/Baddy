@@ -1,5 +1,6 @@
 ﻿using Baddy.Interfaces;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -30,9 +31,7 @@ namespace Baddy.Services
             {
                 var stringValue = Application.Current.Properties[key].ToString();
 
-                return typeof(T).IsEnum
-                    ? (T)Enum.Parse(typeof(T), stringValue)
-                    : (T)Convert.ChangeType(stringValue, typeof(T));
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromString(stringValue);
             } 
             catch
             {

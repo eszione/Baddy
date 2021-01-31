@@ -1,4 +1,7 @@
-﻿namespace Baddy.Helpers
+﻿using Baddy.Enums;
+using System;
+
+namespace Baddy.Helpers
 {
     public class DateTimeHelper
     {
@@ -14,6 +17,16 @@
                 return 1;
 
             return 0;
+        }
+
+        public static DateTime NextScheduledDate(DateTime now, Days day, TimeSpan time)
+        {
+            return now.Date.AddDays(GetDaysUntilNextScheduledDate(now, day)) + time;
+        }
+
+        private static int GetDaysUntilNextScheduledDate(DateTime now, Days day)
+        {
+            return ((int)day - (int)now.DayOfWeek + 7) % 7;
         }
     }
 }

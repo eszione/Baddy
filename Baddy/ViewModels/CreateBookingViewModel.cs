@@ -2,6 +2,7 @@
 using Baddy.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Baddy.ViewModels
@@ -79,14 +80,14 @@ namespace Baddy.ViewModels
             Durations = GetDurations();
             StartTimer();
 
-            BookCommand = new Command(() => Book(), () => CanBook);
+            BookCommand = new Command(async () => await Book(), () => CanBook);
         }
 
         private bool CanBook => SelectedCourt > 0;
 
-        private void Book()
+        private async Task Book()
         {
-            _bookingService.Create(new List<CreateBookingInfo>
+            var bookingConfirmed = await _bookingService.Create(new List<CreateBookingInfo>
             {
                 new CreateBookingInfo
                 {
@@ -95,6 +96,9 @@ namespace Baddy.ViewModels
                     Duration = SelectedDuration
                 }
             });
+
+            if (bookingConfirmed.Result == "1" && bookingConfirmed.Bookings.Find(b => b.Result.Value) != null)
+                await _navigationService.NavigateTo<BookingsViewModel>();
         }
 
         private IEnumerable<int> GetCourts()
