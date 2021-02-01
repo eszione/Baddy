@@ -19,14 +19,18 @@ namespace Baddy.Helpers
             return 0;
         }
 
-        public static DateTime NextScheduledDate(DateTime now, Days day, TimeSpan time)
+        public static DateTime NextScheduledDate(DateTime currentDateTime, Days scheduledDay, TimeSpan time)
         {
-            return now.Date.AddDays(GetDaysUntilNextScheduledDate(now, day)) + time;
+            var nextScheduledDate = currentDateTime.Date.AddDays(GetDaysUntilNextScheduledDate(currentDateTime, scheduledDay)) + time;
+
+            return nextScheduledDate > currentDateTime
+                ? nextScheduledDate
+                : nextScheduledDate.AddDays(7);
         }
 
-        private static int GetDaysUntilNextScheduledDate(DateTime now, Days day)
+        private static int GetDaysUntilNextScheduledDate(DateTime currentDateTime, Days scheduledDay)
         {
-            return ((int)day - (int)now.DayOfWeek + 7) % 7;
+            return ((int)scheduledDay - (int)currentDateTime.DayOfWeek + 7) % 7;
         }
     }
 }

@@ -14,6 +14,8 @@ using Android.Content;
 using Baddy.Android.Services;
 using Baddy.Droid.Helpers;
 using Baddy.Constants;
+using Baddy.Enums;
+using System;
 
 namespace Baddy.Droid
 {
@@ -65,12 +67,13 @@ namespace Baddy.Droid
 
         private void SetupScheduler(IUnityContainer container)
         {
-            if (container.Resolve<IStorageService>().ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff))
-                StartScheduler();
+            var storageService = container.Resolve<IStorageService>();
+            if (storageService.ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff))
+                StartScheduler(storageService);
 
             MessagingCenter.Subscribe<object>(this, ScheduleConstants.StartScheduler, (sender) =>
             {
-                StartScheduler();
+                StartScheduler(storageService);
             });
 
             MessagingCenter.Subscribe<object>(this, ScheduleConstants.StopScheduler, (sender) =>
@@ -79,11 +82,15 @@ namespace Baddy.Droid
             });
         }
 
-        private void StartScheduler()
+        private void StartScheduler(IStorageService storageService)
         {
             var intent = new Intent(this, typeof(Scheduler));
 
-            SchedulerHelper.StartScheduler(this, intent, 5);
+            var scheduleDay = storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
+            var scheduleTime = storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
+            var nextScheduleDate = DateTimeHelper.NextScheduledDate(DateTime.Now, scheduleDay, scheduleTime);
+
+            SchedulerHelper.StartScheduler(this, intent, nextScheduleDate);
         }
 
         private void StopScheduler()

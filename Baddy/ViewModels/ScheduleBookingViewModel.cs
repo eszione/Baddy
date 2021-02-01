@@ -37,13 +37,6 @@ namespace Baddy.ViewModels
             set => SetProperty(ref scheduleDays, value);
         }
 
-        private IEnumerable<Days> bookingDays;
-        public IEnumerable<Days> BookingDays
-        {
-            get => bookingDays;
-            set => SetProperty(ref bookingDays, value);
-        }
-
         private IEnumerable<int> durations;
         public IEnumerable<int> Durations
         {
@@ -70,13 +63,6 @@ namespace Baddy.ViewModels
         {
             get => selectedScheduleTime;
             set => SetProperty(ref selectedScheduleTime, value);
-        }
-
-        private Days selectedBookingDay;
-        public Days SelectedBookingDay
-        {
-            get => selectedBookingDay;
-            set => SetProperty(ref selectedBookingDay, value);
         }
 
         private TimeSpan selectedBookingTime;
@@ -114,7 +100,6 @@ namespace Baddy.ViewModels
             DateNow = DateTime.Now;
 
             ScheduleDays = GetDays();
-            BookingDays = GetDays();
             Durations = GetDurations();
             Courts = GetCourts();
             StartTimer();
@@ -128,7 +113,6 @@ namespace Baddy.ViewModels
             IsScheduled = _storageService.ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff);
             SelectedScheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             SelectedScheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
-            SelectedBookingDay = _storageService.ReadKey<Days>(ScheduleConstants.BookingDay);
             SelectedBookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
             SelectedDuration = GetDefaultInt(_storageService.ReadKey<int>(ScheduleConstants.BookingDuration), Durations.FirstOrDefault());
             SelectedCourt = GetDefaultInt(_storageService.ReadKey<int>(ScheduleConstants.Court), Courts.FirstOrDefault());
@@ -139,14 +123,6 @@ namespace Baddy.ViewModels
             return currentValue == 0 ? defaultValue : currentValue;
         }
 
-        private IEnumerable<int> GetCourts()
-        {
-            return new List<int>
-            {
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
-            };
-        }
-        
         private IEnumerable<Days> GetDays()
         {
             return new List<Days>
@@ -171,6 +147,8 @@ namespace Baddy.ViewModels
             return durations;
         }
 
+        private IEnumerable<int> GetCourts() => new List<int>{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+
         private void StartTimer()
         {
             Device.StartTimer(TimeSpan.FromSeconds(1), () =>
@@ -188,7 +166,6 @@ namespace Baddy.ViewModels
                 await _storageService.SaveKey(ScheduleConstants.ScheduleToggleOnOff, IsScheduled);
                 await _storageService.SaveKey(ScheduleConstants.ScheduleDay, SelectedScheduleDay);
                 await _storageService.SaveKey(ScheduleConstants.ScheduleTime, SelectedScheduleTime);
-                await _storageService.SaveKey(ScheduleConstants.BookingDay, SelectedBookingDay);
                 await _storageService.SaveKey(ScheduleConstants.BookingTime, SelectedBookingTime);
                 await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
@@ -200,7 +177,6 @@ namespace Baddy.ViewModels
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleToggleOnOff);
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleDay);
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleTime);
-                await _storageService.DeleteKey(ScheduleConstants.BookingDay);
                 await _storageService.DeleteKey(ScheduleConstants.BookingTime);
                 await _storageService.DeleteKey(ScheduleConstants.BookingDuration);
                 await _storageService.DeleteKey(ScheduleConstants.Court);
@@ -211,7 +187,6 @@ namespace Baddy.ViewModels
 
         private void ResetDefaultBookingSettings()
         {
-            SelectedBookingDay = default;
             SelectedBookingTime = default;
             SelectedDuration = Durations.FirstOrDefault();
             SelectedCourt = Courts.FirstOrDefault();

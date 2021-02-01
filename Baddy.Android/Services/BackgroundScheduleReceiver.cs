@@ -4,8 +4,10 @@ using Baddy.Droid.Helpers;
 using Baddy.Enums;
 using Baddy.Helpers;
 using Baddy.Interfaces;
+using Baddy.Models;
 using CommonServiceLocator;
 using System;
+using System.Collections.Generic;
 
 namespace Baddy.Android.Services
 {
@@ -23,17 +25,35 @@ namespace Baddy.Android.Services
 
         public override void OnReceive(Context context, Intent intent)
         {
-            var isScheduled = _storageService.ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff);
-            if (isScheduled)
+            var currentDateTime = DateTime.Now;
+
+            var bookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
+            var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
+            var court = _storageService.ReadKey<int>(ScheduleConstants.Court);
+
+            if (CanBook(duration, court))
             {
-                var court = _storageService.ReadKey<int>(ScheduleConstants.Court);
-                var day = _storageService.ReadKey<Days>(ScheduleConstants.BookingDay);
-                var time = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
-                var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
-                Console.WriteLine(DateTimeHelper.NextScheduledDate(DateTime.Now, day, time));
+                Console.WriteLine(currentDateTime.Date.AddDays(14) + bookingTime);
+                /*var bookingConfirmed = _bookingService.Create(new List<CreateBookingInfo>
+                {
+                    new CreateBookingInfo
+                    {
+                        Date = currentDateTime.Date.AddDays(14) + bookingTime,
+                        Court = court,
+                        Duration = duration
+                    }
+                });*/
             }
 
-            SchedulerHelper.StartScheduler(context, intent, 5);
+            var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
+            var scheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
+
+            SchedulerHelper.StartScheduler(context, intent, DateTimeHelper.NextScheduledDate(currentDateTime, scheduleDay, scheduleTime));
+        }
+
+        private bool CanBook(int duration, int court)
+        {
+            return duration > 0 && court > 0;
         }
     }
 }

@@ -2,7 +2,6 @@
 {
     public static class ScheduleConstants
     {
-        public const string BookingDay = "BookingDay";
         public const string BookingDuration = "BookingDuration";
         public const string BookingTime = "BookingTime";
         public const string Court = "ScheduledCourt";

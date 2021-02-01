@@ -27,10 +27,6 @@
                     <Label Text="Booking options" IsVisible="{Binding IsScheduled}" />
                     <StackLayout IsVisible="{Binding IsScheduled}" Padding="10">
                         <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a booking day" VerticalTextAlignment="Center" />
-                            <Picker ItemsSource="{Binding BookingDays}" SelectedItem="{Binding SelectedBookingDay}" HorizontalOptions="FillAndExpand" />
-                        </StackLayout>
-                        <StackLayout Orientation="Horizontal">
                             <Label Text="Select a booking time" VerticalTextAlignment="Center" />
                             <TimePicker Time="{Binding SelectedBookingTime}" HorizontalOptions="FillAndExpand">
                                 <TimePicker.Format>hh:mm tt</TimePicker.Format>
