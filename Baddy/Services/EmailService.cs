@@ -1,24 +1,25 @@
 ﻿using Baddy.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
+using System;
+using System.Net.Mail;
 
 namespace Baddy.Services
 {
     public class EmailService : IEmailService
     {
-        public async Task SendEmail(string recipientName, string recipientEmail)
+        public void SendEmail(string recipientName, string recipientEmail, string subject, string body)
         {
             try
             {
-                var message = new EmailMessage
+                var mail = new MailMessage("badcrew.mailer@gmail.com", recipientEmail, subject, $"Hi {recipientName},\n\n{body}\n\nBadcrew");
+                var smtpServer = new SmtpClient("smtp.gmail.com")
                 {
-                    Subject = "Your booking was confirmed",
-                    Body = $"Hi {recipientName},\nYour booking was confirmed\n\nBadcrew",
-                    To = new List<string> { recipientEmail }
+                    Port = 587,
+                    Host = "smtp.gmail.com",
+                    EnableSsl = true,
+                    Credentials = new System.Net.NetworkCredential("badcrew.mailer@gmail.com", "mailerbadcrew123")
                 };
 
-                await Email.ComposeAsync(message);
+                smtpServer.Send(mail);
             }
             catch
             {

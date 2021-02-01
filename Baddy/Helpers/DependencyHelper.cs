@@ -12,6 +12,7 @@ namespace Baddy.Helpers
         {
             container.RegisterType<IAppContext, AppContext>(new ContainerControlledLifetimeManager());
             container.RegisterType<IAuthService, AuthService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IEmailService, EmailService>(new ContainerControlledLifetimeManager());
             container.RegisterType<IBookingService, BookingService>(new ContainerControlledLifetimeManager());
             container.RegisterType<IHttpService, HttpService>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMenuService, MenuService>(new ContainerControlledLifetimeManager());

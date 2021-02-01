@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace Baddy.Interfaces
+﻿namespace Baddy.Interfaces
 {
     public interface IEmailService
     {
-        Task SendEmail(string recipientName, string recipientEmail);
+        void SendEmail(string recipientName, string recipientEmail, string subject, string body);
     }
 }

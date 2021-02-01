@@ -16,11 +16,15 @@ namespace Baddy.Android.Services
     {
         private readonly IStorageService _storageService;
         private readonly IBookingService _bookingService;
+        private readonly IEmailService _emailService;
+        private readonly IAppContext _appContext;
 
         public Scheduler()
         {
             _storageService = ServiceLocator.Current.GetInstance<IStorageService>();
             _bookingService = ServiceLocator.Current.GetInstance<IBookingService>();
+            _emailService = ServiceLocator.Current.GetInstance<IEmailService>();
+            _appContext = ServiceLocator.Current.GetInstance<IAppContext>();
         }
 
         public override void OnReceive(Context context, Intent intent)
@@ -33,6 +37,8 @@ namespace Baddy.Android.Services
 
             if (CanBook(duration, court))
             {
+                SendEmail(currentDateTime.Date.AddDays(14) + bookingTime);
+
                 Console.WriteLine(currentDateTime.Date.AddDays(14) + bookingTime);
                 /*var bookingConfirmed = _bookingService.Create(new List<CreateBookingInfo>
                 {
@@ -54,6 +60,14 @@ namespace Baddy.Android.Services
         private bool CanBook(int duration, int court)
         {
             return duration > 0 && court > 0;
+        }
+
+        private void SendEmail(DateTime scheduledBookingDate)
+        {
+            var subject = "Booking confirmed";
+            var body = $"Your booking was confirmed for {scheduledBookingDate}";
+
+            _emailService.SendEmail(_appContext.Profile.Name, _appContext.Profile.Email, subject, body);
         }
     }
 }
