@@ -48,14 +48,18 @@ namespace Baddy.ViewModels
         }
 
         private readonly IAuthService _authService;
+        private readonly IProfileService _profileService;
 
         public LoginViewModel(
             IAppContext appContext,
             INavigationService navigationService,
             IAuthService authService,
+            IProfileService profileService,
             IStorageService storageService) : base(appContext, navigationService, storageService)
         {
             _authService = authService;
+            _profileService = profileService;
+
             Title = "Login";
             LoginCommand = new Command(async () => await Login(), () => CanLogin);
         }
@@ -85,6 +89,8 @@ namespace Baddy.ViewModels
                     throw new HttpException(HttpStatusCode.Unauthorized);
 
                 await HandleRememberMe();
+
+                _appContext.Profile = await _profileService.Get();
 
                 await _navigationService.RefreshMenu();
 

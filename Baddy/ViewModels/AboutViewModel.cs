@@ -5,28 +5,43 @@ using Baddy.Interfaces;
 using Baddy.Models;
 using System.Net;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace Baddy.ViewModels
 {
     public class AboutViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
-        public Command OpenWebCommand { get; }
+        private readonly IProfileService _profileService;
+
+        private bool loggedIn;
+        public bool LoggedIn
+        {
+            get => loggedIn;
+            set => SetProperty(ref loggedIn, value);
+        }
+
+        private Profile profile;
+        public Profile Profile
+        {
+            get => profile;
+            set => SetProperty(ref profile, value);
+        }
 
         public AboutViewModel(
             IAppContext appContext,
             INavigationService navigationService,
             IStorageService storageService,
             IAuthService authService,
-            AppState appState) : base(appContext, navigationService, storageService)
+            AppState appState,
+            IProfileService profileService) : base(appContext, navigationService, storageService)
         {
             _authService = authService;
+            _profileService = profileService;
 
-            Title = "About";
+            LoggedIn = _appContext.LoggedIn;
+            Profile = _appContext.Profile;
 
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://xamarin.com"));
+            Title = "Home";
 
             if (appState == AppState.Initialize)
                 Task.Run(async () => await RememberMe());
@@ -47,10 +62,12 @@ namespace Baddy.ViewModels
                     if (loginResult == null || string.IsNullOrWhiteSpace(loginResult.Token))
                         throw new HttpException(HttpStatusCode.BadRequest, "Incorrect details");
 
-                    _appContext.LoggedIn = await _authService.Authorize(loginResult.Token);
+                    LoggedIn = _appContext.LoggedIn = await _authService.Authorize(loginResult.Token);
 
-                    if (!_appContext.LoggedIn)
+                    if (!LoggedIn)
                         throw new HttpException(HttpStatusCode.Unauthorized);
+
+                    Profile = _appContext.Profile = await _profileService.Get();
 
                     await _navigationService.RefreshMenu();
                 }
