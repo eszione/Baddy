@@ -28,6 +28,7 @@ namespace Baddy.ViewModels
             set => SetProperty(ref profile, value);
         }
 
+        public Command LoginCommand { get; set; }
         public Command ViewProfileCommand { get; set; }
         public Command ViewBookingsCommand { get; set; }
         public Command ScheduleBookingCommand { get; set; }
@@ -51,6 +52,7 @@ namespace Baddy.ViewModels
             if (appState == AppState.Initialize)
                 Task.Run(async () => await RememberMe());
 
+            LoginCommand = new Command(async() => await navigationService.NavigateTo<LoginViewModel>());
             ViewProfileCommand = new Command(async() => await navigationService.NavigateTo<ProfileViewModel>());
             ViewBookingsCommand = new Command(async() => await navigationService.NavigateTo<BookingsViewModel>());
             ScheduleBookingCommand = new Command(async() => await navigationService.NavigateTo<ScheduleBookingViewModel>());

@@ -17,13 +17,23 @@
                         </MultiTrigger>
                     </Label.Triggers>
                 </Label>
-                <Label Text="Please login to book" HorizontalTextAlignment="Center" Margin="0, 10, 0, 0" IsVisible="True">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding LoggedIn}" Value="True">
+                <StackLayout Margin="0, 20, 0, 0">
+                    <StackLayout.Triggers>
+                        <MultiTrigger TargetType="StackLayout">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding LoggedIn}" Value="True" />
+                                <BindingCondition Binding="{Binding Profile.Name, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
+                            </MultiTrigger.Conditions>
                             <Setter Property="IsVisible" Value="False" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
+                        </MultiTrigger>
+                    </StackLayout.Triggers>
+                    <Image Source="login.png" HeightRequest="40">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoginCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Label Text="Please login to book" HorizontalTextAlignment="Center" />
+                </StackLayout>
                 <Grid RowSpacing="20" Margin="0, 30, 0, 0" IsVisible="{Binding LoggedIn}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
