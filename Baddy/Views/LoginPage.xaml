@@ -6,7 +6,7 @@
              Title="{Binding Title}">
     <Grid>
         <ScrollView>
-            <StackLayout Orientation="Vertical">
+            <StackLayout Orientation="Vertical" Padding="10">
                 <Label Text="{Binding Error}" 
                        Style="{StaticResource ErrorMessage}" 
                        IsVisible="{Binding Error, Converter={StaticResource NotEmptyStringToBool}}" />
@@ -17,7 +17,7 @@
                     </Entry.Behaviors>
                 </Entry>
                 <Label Text="Pin number" />
-                <Entry x:Name="PinNumber" Text="{Binding PinNumber}" Keyboard="Numeric">
+                <Entry x:Name="PinNumber" Text="{Binding PinNumber}" Keyboard="Numeric" IsPassword="True">
                     <Entry.Behaviors>
                         <behaviors:EntryCompletedBehaviour EntryCompletedCommand="{Binding LoginCommand}"/>
                     </Entry.Behaviors>

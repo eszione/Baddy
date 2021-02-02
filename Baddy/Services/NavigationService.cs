@@ -30,27 +30,23 @@ namespace Baddy.Services
 
         public async Task NavigateTo<T>(params object[] parameters)
         {
-            var flyoutPage = (FlyoutPage)Application.Current.MainPage;
-
+            var flyoutPage = (FlyoutPage)Application.Current.MainPage;            
             switch (typeof(T))
             {
-                case Type model when model == typeof(HomeViewModel):
-                    flyoutPage.Detail = new NavigationPage(new HomePage(_appContext));
-                    break;
                 case Type model when model == typeof(LoginViewModel):
-                    flyoutPage.Detail = new NavigationPage(new LoginPage());
+                    await flyoutPage.Detail.Navigation.PushAsync(new LoginPage());
                     break;
                 case Type model when model == typeof(ProfileViewModel):
-                    flyoutPage.Detail = new NavigationPage(new ProfilePage());
+                    await flyoutPage.Detail.Navigation.PushAsync(new ProfilePage());
                     break;
                 case Type model when model == typeof(CreateBookingViewModel):
-                    flyoutPage.Detail = new NavigationPage(new CreateBookingPage());
+                    await flyoutPage.Detail.Navigation.PushAsync(new CreateBookingPage());
                     break;
                 case Type model when model == typeof(BookingsViewModel):
-                    flyoutPage.Detail = new NavigationPage(new BookingsPage());
+                    await flyoutPage.Detail.Navigation.PushAsync(new BookingsPage());
                     break;
                 case Type model when model == typeof(ScheduleBookingViewModel):
-                    flyoutPage.Detail = new NavigationPage(new ScheduleBookingPage());
+                    await flyoutPage.Detail.Navigation.PushAsync(new ScheduleBookingPage());
                     break;
                 default:
                     await flyoutPage.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
