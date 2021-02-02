@@ -33,6 +33,9 @@
     <Compile Update="Styles\ColourStyles.xaml.cs">
       <DependentUpon>ColourStyles.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\HomePage.xaml.cs">
+      <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ScheduleBookingPage.xaml.cs">
       <DependentUpon>ScheduleBookingPage.xaml</DependentUpon>
     </Compile>

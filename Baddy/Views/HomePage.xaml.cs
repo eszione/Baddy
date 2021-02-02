@@ -9,13 +9,13 @@ using Unity;
 namespace Baddy.Views
 {
     [DesignTimeVisible(false)]
-    public partial class AboutPage : ContentPage
+    public partial class HomePage : ContentPage
     {
-        public AboutPage(IAppContext appContext, AppState appState = AppState.Navigate)
+        public HomePage(IAppContext appContext, AppState appState = AppState.Navigate)
         {
             InitializeComponent();
 
-            BindingContext = appContext.Container.Resolve<AboutViewModel>(
+            BindingContext = appContext.Container.Resolve<HomeViewModel>(
                 new ResolverOverride[] {
                     new ParameterOverride("appState", appState)
                 }

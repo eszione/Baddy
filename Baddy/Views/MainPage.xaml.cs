@@ -16,7 +16,7 @@ namespace Baddy.Views
 
             FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
 
-            Detail = new NavigationPage(new AboutPage(appContext, AppState.Initialize));
+            Detail = new NavigationPage(new HomePage(appContext, AppState.Initialize));
         }
     }
 }

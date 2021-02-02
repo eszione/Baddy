@@ -5,10 +5,11 @@ using Baddy.Interfaces;
 using Baddy.Models;
 using System.Net;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Baddy.ViewModels
 {
-    public class AboutViewModel : BaseViewModel
+    public class HomeViewModel : BaseViewModel
     {
         private readonly IAuthService _authService;
         private readonly IProfileService _profileService;
@@ -27,7 +28,11 @@ namespace Baddy.ViewModels
             set => SetProperty(ref profile, value);
         }
 
-        public AboutViewModel(
+        public Command ViewProfileCommand { get; set; }
+        public Command ViewBookingsCommand { get; set; }
+        public Command ScheduleBookingCommand { get; set; }
+
+        public HomeViewModel(
             IAppContext appContext,
             INavigationService navigationService,
             IStorageService storageService,
@@ -45,6 +50,10 @@ namespace Baddy.ViewModels
 
             if (appState == AppState.Initialize)
                 Task.Run(async () => await RememberMe());
+
+            ViewProfileCommand = new Command(async() => await navigationService.NavigateTo<ProfileViewModel>());
+            ViewBookingsCommand = new Command(async() => await navigationService.NavigateTo<BookingsViewModel>());
+            ScheduleBookingCommand = new Command(async() => await navigationService.NavigateTo<ScheduleBookingViewModel>());
         }
 
         private async Task RememberMe()

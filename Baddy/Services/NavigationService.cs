@@ -34,8 +34,8 @@ namespace Baddy.Services
 
             switch (typeof(T))
             {
-                case Type model when model == typeof(AboutViewModel):
-                    flyoutPage.Detail = new NavigationPage(new AboutPage(_appContext));
+                case Type model when model == typeof(HomeViewModel):
+                    flyoutPage.Detail = new NavigationPage(new HomePage(_appContext));
                     break;
                 case Type model when model == typeof(LoginViewModel):
                     flyoutPage.Detail = new NavigationPage(new LoginPage());
@@ -83,7 +83,7 @@ namespace Baddy.Services
         public Task NavigateToHome()
         {
             var currentMaster = (FlyoutPage)Application.Current.MainPage;
-            currentMaster.Detail = new NavigationPage(new AboutPage(_appContext));
+            currentMaster.Detail = new NavigationPage(new HomePage(_appContext));
 
             return Task.CompletedTask;
         }
