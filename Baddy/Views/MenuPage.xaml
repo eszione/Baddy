@@ -10,7 +10,8 @@
         <ListView x:Name="ListViewMenu"
                   HasUnevenRows="True"
                   ItemsSource="{Binding MenuItems}"
-                  ItemSelected="ListViewMenu_ItemSelected">
+                  ItemSelected="ListViewMenu_ItemSelected"
+                  BackgroundColor="Transparent">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

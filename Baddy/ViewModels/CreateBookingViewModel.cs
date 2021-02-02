@@ -1,5 +1,6 @@
 ﻿using Baddy.Interfaces;
 using Baddy.Models;
+using Baddy.PopupModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -98,7 +99,11 @@ namespace Baddy.ViewModels
             });
 
             if (bookingConfirmed.Result == "1" && bookingConfirmed.Bookings.Find(b => b.Result.Value) != null)
+            {
+                _ = _navigationService.ShowPopup<ToastViewModel>(true, "Booking created");
+
                 await _navigationService.NavigateTo<BookingsViewModel>();
+            }
         }
 
         private IEnumerable<int> GetCourts()

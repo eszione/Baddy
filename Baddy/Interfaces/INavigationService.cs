@@ -6,6 +6,7 @@ namespace Baddy.Interfaces
     {
         Task CloseMenu();
         Task NavigateTo<T>(params object[] parameters);
+        Task ShowPopup<T>(bool isToast = false, params object[] parameters);
         Task NavigateToHome();
         Task RefreshMenu();
     }

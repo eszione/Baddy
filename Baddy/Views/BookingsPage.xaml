@@ -6,7 +6,7 @@
              x:Name="BookingsRef">
     <Grid>
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <ListView ItemsSource="{Binding Bookings}" HasUnevenRows="True">
+            <ListView ItemsSource="{Binding Bookings}" HasUnevenRows="True" BackgroundColor="White">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -34,7 +34,7 @@
                                     <Label Text="{Binding Status}"/>
                                 </StackLayout>
                                 <StackLayout HorizontalOptions="EndAndExpand" VerticalOptions="CenterAndExpand">
-                                    <Image Source="trash.jpg" HeightRequest="50">
+                                    <Image Source="trash.png" HeightRequest="40">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference BookingsRef}}" CommandParameter="{Binding BookingNo}" />
                                         </Image.GestureRecognizers>

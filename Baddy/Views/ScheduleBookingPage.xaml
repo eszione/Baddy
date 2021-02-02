@@ -6,7 +6,7 @@
     <Grid>
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <ScrollView>
-                <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="10">
+                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="10">
                     <Label Text="Schedule options" />
                     <StackLayout Padding="10">
                         <StackLayout Orientation="Horizontal">
@@ -41,7 +41,7 @@
                             <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" HorizontalOptions="FillAndExpand" />
                         </StackLayout>
                     </StackLayout>
-                    <Button Text="Schedule" Command="{Binding ScheduleCommand}" />
+                    <Button Text="Schedule" Command="{Binding ScheduleCommand}" BackgroundColor="{Binding ThemeColor}" TextColor="White" />
                 </StackLayout>
             </ScrollView>
         </RefreshView>

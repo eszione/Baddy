@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Baddy.Interfaces;
+using Baddy.PopupModels;
 using Baddy.ViewModels;
 using Baddy.Views;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 
 namespace Baddy.Services
@@ -26,31 +30,53 @@ namespace Baddy.Services
 
         public async Task NavigateTo<T>(params object[] parameters)
         {
-            var currentMaster = (FlyoutPage)Application.Current.MainPage;
+            var flyoutPage = (FlyoutPage)Application.Current.MainPage;
 
             switch (typeof(T))
             {
                 case Type model when model == typeof(AboutViewModel):
-                    currentMaster.Detail = new NavigationPage(new AboutPage(_appContext));
+                    flyoutPage.Detail = new NavigationPage(new AboutPage(_appContext));
                     break;
                 case Type model when model == typeof(LoginViewModel):
-                    currentMaster.Detail = new NavigationPage(new LoginPage());
+                    flyoutPage.Detail = new NavigationPage(new LoginPage());
                     break;
                 case Type model when model == typeof(ProfileViewModel):
-                    currentMaster.Detail = new NavigationPage(new ProfilePage());
+                    flyoutPage.Detail = new NavigationPage(new ProfilePage());
                     break;
                 case Type model when model == typeof(CreateBookingViewModel):
-                    currentMaster.Detail = new NavigationPage(new CreateBookingPage());
+                    flyoutPage.Detail = new NavigationPage(new CreateBookingPage());
                     break;
                 case Type model when model == typeof(BookingsViewModel):
-                    currentMaster.Detail = new NavigationPage(new BookingsPage());
+                    flyoutPage.Detail = new NavigationPage(new BookingsPage());
                     break;
                 case Type model when model == typeof(ScheduleBookingViewModel):
-                    currentMaster.Detail = new NavigationPage(new ScheduleBookingPage());
+                    flyoutPage.Detail = new NavigationPage(new ScheduleBookingPage());
                     break;
                 default:
-                    await currentMaster.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
+                    await flyoutPage.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
                     break;
+            }
+        }
+
+        public async Task ShowPopup<T>(bool isToast = false, params object[] parameters)
+        {
+            try
+            {
+                var popup = GeneratePopup<T>(parameters);
+                if (popup != null)
+                {
+                    await PopupNavigation.Instance.PushAsync(popup, true);
+                    if (isToast)
+                    {
+                        await Task.Delay(2000);
+                        if (PopupNavigation.Instance.PopupStack.Any())
+                            await PopupNavigation.Instance.PopAllAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayError(ex.Message);
             }
         }
 
@@ -68,6 +94,28 @@ namespace Baddy.Services
             currentMaster.Flyout = new MenuPage();
 
             return Task.CompletedTask;
+        }
+
+        private PopupPage GeneratePopup<T>(params object[] parameters)
+        {
+            PopupPage popup;
+            var popupType = typeof(T);
+            if (popupType == typeof(ToastViewModel))
+                popup = new ToastPopup(_appContext, (string)parameters[0])
+                {
+                    CloseWhenBackgroundIsClicked = true
+                };
+            else
+                throw new Exception($"Popup type: {popupType} does not exist");
+
+            return popup;
+        }
+
+        private async Task DisplayError(string message)
+        {
+            var flyoutPage = (FlyoutPage)Application.Current.MainPage;
+
+            await flyoutPage.DisplayAlert("Error", message, "OK");
         }
     }
 }

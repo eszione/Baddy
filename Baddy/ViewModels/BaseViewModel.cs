@@ -37,6 +37,8 @@ namespace Baddy.ViewModels
             set => SetProperty(ref error, value);
         }
 
+        public Color ThemeColor { get; private set; }
+
         public Command RefreshCommand { get; set; }
 
         protected readonly IAppContext _appContext;
@@ -51,6 +53,8 @@ namespace Baddy.ViewModels
             _appContext = appContext;
             _navigationService = navigationService;
             _storageService = storageService;
+
+            ThemeColor = Color.FromHex("#2296F3");
 
             RefreshCommand = new Command(() => Refresh());
         }

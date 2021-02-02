@@ -1,6 +1,7 @@
 ﻿using Baddy.Constants;
 using Baddy.Enums;
 using Baddy.Interfaces;
+using Baddy.PopupModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -170,6 +171,8 @@ namespace Baddy.ViewModels
                 await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
 
+                _= _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler started");
+
                 MessagingCenter.Send<object>(this, ScheduleConstants.StartScheduler);
             }
             else
@@ -182,6 +185,8 @@ namespace Baddy.ViewModels
                 await _storageService.DeleteKey(ScheduleConstants.Court);
 
                 MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
+
+                _= _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler stopped");
             }
         }
 

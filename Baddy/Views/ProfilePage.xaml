@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Baddy.Views.ProfilePage"
              Title="{Binding Title}">
-    <Grid>
+    <Grid BackgroundColor="White">
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
             <ScrollView>
                 <StackLayout Orientation="Vertical" Padding="10">

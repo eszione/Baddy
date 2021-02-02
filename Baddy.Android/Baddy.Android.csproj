@@ -70,6 +70,9 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+    <PackageReference Include="Unity">
+      <Version>5.11.10</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.1931" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
@@ -93,26 +96,17 @@
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon_round.xml" />
-    <AndroidResource Include="Resources\mipmap-hdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-hdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-mdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
-    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Baddy\Baddy.csproj">
       <Project>{4008A029-8CF1-4E39-AC81-A59AF0570B1F}</Project>
       <Name>Baddy</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\trash.jpg" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-mdpi\badcrew.png" />
@@ -128,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-hdpi\badcrew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\trash.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

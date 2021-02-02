@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Baddy.Views.AboutPage"
              Title="{Binding Title}">
-    <Grid>
+    <Grid BackgroundColor="White">
         <ScrollView>
             <StackLayout Padding="10">
                 <Label Text="Welcome" FontSize="22" FontFamily="Bold" HorizontalOptions="Center">

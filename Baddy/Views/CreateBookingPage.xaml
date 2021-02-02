@@ -5,14 +5,14 @@
              Title="{Binding Title}">
     <Grid>
         <ScrollView>
-            <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
                 <DatePicker Date="{Binding SelectedDate}" MinimumDate="{Binding DateNow}" />
                 <TimePicker Time="{Binding SelectedTime}">
                     <TimePicker.Format>hh:mm tt</TimePicker.Format>
                 </TimePicker>
                 <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" Title="Select a court" />
                 <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" Title="Select a duration" />
-                <Button Text="Book" Command="{Binding BookCommand}" />
+                <Button Text="Book" Command="{Binding BookCommand}" BackgroundColor="{Binding ThemeColor}" TextColor="White" />
             </StackLayout>
         </ScrollView>
         <ActivityIndicator IsRunning="{Binding IsBusy}"

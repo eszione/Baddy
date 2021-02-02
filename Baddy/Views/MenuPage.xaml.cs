@@ -20,6 +20,8 @@ namespace Baddy.Views
                 return;
 
             ((MenuItem)e.SelectedItem).Handler();
+
+            ((ListView)sender).SelectedItem = null;
         }
     }
 }
