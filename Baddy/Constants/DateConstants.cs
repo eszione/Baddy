@@ -5,5 +5,6 @@
         public static string ShortDateFormat => "d MMMM yyyy";
         public static string LongDateFormat => "dddd, dd MMMM yyyy";
         public static string LongDateTimeFormat => "dddd, dd MMMM yyyy H:mm tt";
+        public static string VeryLongDateTimeFormat => "dddd, dd MMMM yyyy H:mm:ss tt";
     }
 }

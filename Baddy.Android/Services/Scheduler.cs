@@ -43,7 +43,7 @@ namespace Baddy.Android.Services
 
             SchedulerHelper.StartScheduler(context, nextScheduleDateTime);
 
-            SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.ToString(DateConstants.LongDateTimeFormat)}\n");
+            SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.ToString(DateConstants.LongDateTimeFormat)}");
         }
 
         private bool CanBook(int duration, int court)
@@ -77,7 +77,7 @@ namespace Baddy.Android.Services
                                 "Booking confirmed", 
                                 $"Your booking was confirmed for {bookingDate.ToString(DateConstants.LongDateTimeFormat)}" +
                                 $"\nCourt {court}, {duration} minutes\n\n" +
-                                $"Current time is: {DateTime.Now.ToString(DateConstants.LongDateTimeFormat)}"
+                                $"Current time is: {DateTime.Now.ToString(DateConstants.VeryLongDateTimeFormat)}"
                             );
                             break;
                         }
