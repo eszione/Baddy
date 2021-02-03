@@ -171,7 +171,7 @@ namespace Baddy.ViewModels
                 await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
 
-                _= _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler started");
+                _= _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler started");
 
                 MessagingCenter.Send<object>(this, ScheduleConstants.StartScheduler);
             }
@@ -186,7 +186,7 @@ namespace Baddy.ViewModels
 
                 MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
 
-                _ = _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler stopped");
+                _ = _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler stopped");
             }
         }
 

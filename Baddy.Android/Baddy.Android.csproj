@@ -34,10 +34,10 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>C:\development\Baddy\baddy.keystore</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>badcrew</AndroidSigningStorePass>
-    <AndroidSigningKeyAlias>baddy</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>badcrew</AndroidSigningKeyPass>
+    <AndroidSigningKeyStore>C:\development\Baddy\Distribution\badcrew.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>badcrew123</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>badcrew</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>badcrew123</AndroidSigningKeyPass>
     <AndroidUseAapt2>true</AndroidUseAapt2>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -137,6 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\create_booking.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

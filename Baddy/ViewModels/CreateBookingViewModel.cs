@@ -88,21 +88,38 @@ namespace Baddy.ViewModels
 
         private async Task Book()
         {
-            var bookingConfirmed = await _bookingService.Create(new List<CreateBookingInfo>
+            EventHandler<bool> eventHandler = async (_, confirm) => await OnConfirmation(confirm);
+
+            await _navigationService.ShowPopup<ConfirmationPopupModel>(false, "Are you sure you want to create this booking?", eventHandler);
+        }
+
+        private async Task OnConfirmation(bool confirm)
+        {
+            if (!confirm)
+                return;
+
+            try
             {
-                new CreateBookingInfo
+                var bookingConfirmed = await _bookingService.Create(new List<CreateBookingInfo>
                 {
-                    Date = SelectedDate.Date + SelectedTime,
-                    Court = SelectedCourt,
-                    Duration = SelectedDuration
+                    new CreateBookingInfo
+                    {
+                        Date = SelectedDate.Date + SelectedTime,
+                        Court = SelectedCourt,
+                        Duration = SelectedDuration
+                    }
+                });
+
+                if (bookingConfirmed.Result == "1" && bookingConfirmed.Bookings.Find(b => b.Result.Value) != null)
+                {
+                    _ = _navigationService.ShowPopup<ToastPopupModel>(true, "Booking created");
+
+                    await _navigationService.NavigateTo<BookingsViewModel>();
                 }
-            });
-
-            if (bookingConfirmed.Result == "1" && bookingConfirmed.Bookings.Find(b => b.Result.Value) != null)
+            }
+            catch
             {
-                _ = _navigationService.ShowPopup<ToastViewModel>(true, "Booking created");
-
-                await _navigationService.NavigateTo<BookingsViewModel>();
+                await _navigationService.DisplayError("Error occurred while creating the booking");
             }
         }
 

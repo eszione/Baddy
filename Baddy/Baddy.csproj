@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="PopupViews\ConfirmationPopup.xaml.cs">
+      <DependentUpon>ConfirmationPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="PopupViews\ToastPopup.xaml.cs">
       <DependentUpon>ToastPopup.xaml</DependentUpon>
     </Compile>

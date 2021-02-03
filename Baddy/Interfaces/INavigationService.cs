@@ -9,5 +9,6 @@ namespace Baddy.Interfaces
         Task ShowPopup<T>(bool isToast = false, params object[] parameters);
         Task NavigateToHome();
         Task RefreshMenu();
+        Task DisplayError(string message);
     }
 }

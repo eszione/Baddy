@@ -32,6 +32,7 @@ namespace Baddy.ViewModels
         public Command ViewProfileCommand { get; set; }
         public Command ViewBookingsCommand { get; set; }
         public Command ScheduleBookingCommand { get; set; }
+        public Command CreateBookingCommand { get; set; }
 
         public HomeViewModel(
             IAppContext appContext,
@@ -56,6 +57,7 @@ namespace Baddy.ViewModels
             ViewProfileCommand = new Command(async() => await navigationService.NavigateTo<ProfileViewModel>());
             ViewBookingsCommand = new Command(async() => await navigationService.NavigateTo<BookingsViewModel>());
             ScheduleBookingCommand = new Command(async() => await navigationService.NavigateTo<ScheduleBookingViewModel>());
+            CreateBookingCommand = new Command(async() => await navigationService.NavigateTo<CreateBookingViewModel>());
         }
 
         private async Task RememberMe()

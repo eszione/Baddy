@@ -96,18 +96,32 @@ namespace Baddy.Services
         {
             PopupPage popup;
             var popupType = typeof(T);
-            if (popupType == typeof(ToastViewModel))
+            if (popupType == typeof(ToastPopupModel))
+            {
                 popup = new ToastPopup(_appContext, (string)parameters[0])
                 {
                     CloseWhenBackgroundIsClicked = true
                 };
+            }
+            else if (popupType == typeof(ConfirmationPopupModel))
+            {
+                popup = new ConfirmationPopup(_appContext, (string)parameters[0])
+                {
+                    CloseWhenBackgroundIsClicked = false
+                };
+
+                ((ConfirmationPopupModel)popup.BindingContext).CallbackEvent
+                    += (EventHandler<bool>)parameters[1];
+            }
             else
+            {
                 throw new Exception($"Popup type: {popupType} does not exist");
+            }
 
             return popup;
         }
 
-        private async Task DisplayError(string message)
+        public async Task DisplayError(string message)
         {
             var flyoutPage = (FlyoutPage)Application.Current.MainPage;
 

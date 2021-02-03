@@ -1,9 +1,9 @@
 ﻿namespace Baddy.PopupModels
 {
-    public class ToastViewModel
+    public class ToastPopupModel
     {
         public string Message { get; set; }
-        public ToastViewModel(string message)
+        public ToastPopupModel(string message)
         {
             Message = message;
         }

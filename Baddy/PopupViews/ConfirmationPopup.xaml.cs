@@ -8,13 +8,13 @@ using Baddy.PopupModels;
 namespace Baddy.Views
 {
     [DesignTimeVisible(false)]
-    public partial class ToastPopup : PopupPage
+    public partial class ConfirmationPopup : PopupPage
     {
-        public ToastPopup(IAppContext appContext, string message)
+        public ConfirmationPopup(IAppContext appContext, string message)
         {
             InitializeComponent();
 
-            BindingContext = appContext.Container.Resolve<ToastPopupModel>(
+            BindingContext = appContext.Container.Resolve<ConfirmationPopupModel>(
                 new ResolverOverride[] {
                     new ParameterOverride("message", message)
                 }

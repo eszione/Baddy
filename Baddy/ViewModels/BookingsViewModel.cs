@@ -2,6 +2,7 @@
 using Baddy.Interfaces;
 using Baddy.Models;
 using Baddy.Models.Apis;
+using Baddy.PopupModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,6 +57,16 @@ namespace Baddy.ViewModels
 
         public async Task Delete(string bookingNo)
         {
+            EventHandler<bool> eventHandler = async (_, confirm) => await OnConfirmation(confirm, bookingNo);
+
+            await _navigationService.ShowPopup<ConfirmationPopupModel>(false, "Are you sure you want to delete this booking?", eventHandler);
+        }
+
+        private async Task OnConfirmation(bool confirm, string bookingNo)
+        {
+            if (!confirm)
+                return;
+
             await _bookingService.Delete(bookingNo);
 
             await SetBookings();
