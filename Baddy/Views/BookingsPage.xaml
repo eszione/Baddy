@@ -15,7 +15,7 @@
                                     <Label>
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding Date}" />
+                                                <Span Text="{Binding DateToString}" />
                                                 <Span Text=" " />
                                                 <Span Text="{Binding Time}" />
                                             </FormattedString>

@@ -28,7 +28,8 @@ namespace Baddy.Services
             var mainDiv = doc.GetElementsByTagName("form")[0].ChildNodes[1];
             var personalInfo = mainDiv.SelectSingleNode("div//div[@id='personal-info']");
             var infoSettings = mainDiv.SelectSingleNode("div/div/div[@class='my-info-settings']");
-            return new Profile
+
+            var profile = new Profile
             {
                 AdditionalEmail = personalInfo.SelectSingleNode("div/input[@name='email1']/@value").InnerText,
                 Balance = infoSettings.SelectSingleNode("div[@title='Balance']/div[contains(@class,'form-control')]").InnerText,
@@ -45,6 +46,19 @@ namespace Baddy.Services
                 Street = personalInfo.SelectSingleNode("div/input[@name='street']/@value").InnerText,
                 Suburb = personalInfo.SelectSingleNode("div/input[@name='suburb']/@value").InnerText,
             };
+
+            try
+            {
+                var nameSplit = profile.Name.Split(' ');
+                profile.FirstName = nameSplit[0];
+                profile.Surname = nameSplit[1];
+            }
+            catch
+            {
+                profile.FirstName = profile.Name;
+            }
+
+            return profile;
         }
     }
 }

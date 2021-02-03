@@ -14,6 +14,10 @@
                                 <Label Text="Schedule on/off"/>
                                 <Switch IsToggled="{Binding IsScheduled}" />
                             </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsScheduled}">
+                                <Label Text="Schedule in the background"/>
+                                <Switch IsToggled="{Binding IsForegroundService}" />
+                            </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="Select a schedule day" VerticalTextAlignment="Center" />
                                 <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" HorizontalOptions="FillAndExpand" />

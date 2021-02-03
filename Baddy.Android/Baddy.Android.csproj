@@ -82,7 +82,8 @@
     <Compile Include="Renderers\MyTimePickerRenderer.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BackgroundScheduleReceiver.cs" />
+    <Compile Include="Services\Scheduler.cs" />
+    <Compile Include="Services\ForegroundScheduler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

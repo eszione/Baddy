@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Baddy.Constants;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Baddy.Models.Apis
 {
@@ -37,5 +40,9 @@ namespace Baddy.Models.Apis
         public string RefundHours { get; set; }
         [JsonProperty("percent_refund")]
         public int PercentRefund { get; set; }
+
+        public string DateToString => DateTime.TryParseExact(Date, DateConstants.ShortDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
+            ? result.ToString(DateConstants.LongDateFormat)
+            : Date;
     }
 }

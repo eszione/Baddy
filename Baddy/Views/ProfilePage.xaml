@@ -28,7 +28,7 @@
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Card Expiry: " />
-                        <Label Text="{Binding Profile.CardExpiry}" />
+                        <Label Text="{Binding Profile.CardExpiryToString}" />
                     </StackLayout>
                 </StackLayout>
             </ScrollView>

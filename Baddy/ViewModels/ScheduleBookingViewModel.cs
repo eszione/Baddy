@@ -31,6 +31,13 @@ namespace Baddy.ViewModels
             }
         }
 
+        private bool isForegroundService;
+        public bool IsForegroundService
+        {
+            get => isForegroundService;
+            set => SetProperty(ref isForegroundService, value);
+        }
+        
         private IEnumerable<Days> scheduleDays;
         public IEnumerable<Days> ScheduleDays
         {
@@ -112,6 +119,7 @@ namespace Baddy.ViewModels
         public void SetScheduledDefaults()
         {
             IsScheduled = _storageService.ReadKey<bool>(ScheduleConstants.ScheduleToggleOnOff);
+            IsForegroundService = _storageService.ReadKey<bool>(ScheduleConstants.ForegroundToggleOnOff);
             SelectedScheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             SelectedScheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
             SelectedBookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
@@ -165,26 +173,36 @@ namespace Baddy.ViewModels
             if (IsScheduled)
             {
                 await _storageService.SaveKey(ScheduleConstants.ScheduleToggleOnOff, IsScheduled);
+                await _storageService.SaveKey(ScheduleConstants.ForegroundToggleOnOff, IsForegroundService);
                 await _storageService.SaveKey(ScheduleConstants.ScheduleDay, SelectedScheduleDay);
                 await _storageService.SaveKey(ScheduleConstants.ScheduleTime, SelectedScheduleTime);
                 await _storageService.SaveKey(ScheduleConstants.BookingTime, SelectedBookingTime);
                 await _storageService.SaveKey(ScheduleConstants.BookingDuration, SelectedDuration);
                 await _storageService.SaveKey(ScheduleConstants.Court, SelectedCourt);
 
-                _= _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler started");
-
-                MessagingCenter.Send<object>(this, ScheduleConstants.StartScheduler);
+                if (_storageService.ReadKey<bool>(ScheduleConstants.ForegroundToggleOnOff))
+                {
+                    MessagingCenter.Send<object>(this, ScheduleConstants.StartForegroundService);
+                    _ = _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler started in the background");
+                }
+                else
+                {
+                    MessagingCenter.Send<object>(this, ScheduleConstants.StopForegroundService);
+                    MessagingCenter.Send<object>(this, ScheduleConstants.StartScheduler);
+                    _ = _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler started");
+                }
             }
             else
             {
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleToggleOnOff);
+                await _storageService.DeleteKey(ScheduleConstants.ForegroundToggleOnOff);
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleDay);
                 await _storageService.DeleteKey(ScheduleConstants.ScheduleTime);
                 await _storageService.DeleteKey(ScheduleConstants.BookingTime);
                 await _storageService.DeleteKey(ScheduleConstants.BookingDuration);
                 await _storageService.DeleteKey(ScheduleConstants.Court);
 
-                MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
+                MessagingCenter.Send<object>(this, ScheduleConstants.StopForegroundService);
 
                 _ = _navigationService.ShowPopup<ToastPopupModel>(true, "Booking scheduler stopped");
             }
@@ -195,6 +213,7 @@ namespace Baddy.ViewModels
             SelectedBookingTime = default;
             SelectedDuration = Durations.FirstOrDefault();
             SelectedCourt = Courts.FirstOrDefault();
+            IsForegroundService = false;
         }
 
         private void Refresh()

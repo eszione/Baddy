@@ -11,9 +11,9 @@
                         <MultiTrigger TargetType="Label">
                             <MultiTrigger.Conditions>
                                 <BindingCondition Binding="{Binding LoggedIn}" Value="True" />
-                                <BindingCondition Binding="{Binding Profile.Name, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
+                                <BindingCondition Binding="{Binding Profile.FirstName, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Text" Value="{Binding Profile.Name, StringFormat='Welcome {0}'}" />
+                            <Setter Property="Text" Value="{Binding Profile.FirstName, StringFormat='Welcome {0}!'}" />
                         </MultiTrigger>
                     </Label.Triggers>
                 </Label>
@@ -22,7 +22,7 @@
                         <MultiTrigger TargetType="StackLayout">
                             <MultiTrigger.Conditions>
                                 <BindingCondition Binding="{Binding LoggedIn}" Value="True" />
-                                <BindingCondition Binding="{Binding Profile.Name, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
+                                <BindingCondition Binding="{Binding Profile.FirstName, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="IsVisible" Value="False" />
                         </MultiTrigger>
@@ -34,7 +34,16 @@
                     </Image>
                     <Label Text="Please login to book" HorizontalTextAlignment="Center" />
                 </StackLayout>
-                <Grid RowSpacing="20" Margin="0, 30, 0, 0" IsVisible="{Binding LoggedIn}">
+                <Grid RowSpacing="20" Margin="0, 30, 0, 0" IsVisible="False">
+                    <Grid.Triggers>
+                        <MultiTrigger TargetType="Grid">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding LoggedIn}" Value="True" />
+                                <BindingCondition Binding="{Binding Profile.FirstName, Converter={StaticResource NotEmptyStringToBool}}" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="True" />
+                        </MultiTrigger>
+                    </Grid.Triggers>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="80"/>
                         <RowDefinition Height="80"/>

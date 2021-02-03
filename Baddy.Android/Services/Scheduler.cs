@@ -39,7 +39,7 @@ namespace Baddy.Android.Services
             var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             var scheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
 
-            SchedulerHelper.StartScheduler(context, intent, DateTimeHelper.NextScheduledDate(currentDateTime, scheduleDay, scheduleTime));
+            SchedulerHelper.StartScheduler(context, DateTimeHelper.NextScheduledDate(currentDateTime, scheduleDay, scheduleTime));
         }
 
         private bool CanBook(int duration, int court)
@@ -64,11 +64,15 @@ namespace Baddy.Android.Services
                 {
                     try
                     {
-                        var bookingConfirmed = await Book(currentDateTime.Date.AddDays(14) + bookingTime, court, duration);
+                        var bookingDate = currentDateTime.Date.AddDays(14) + bookingTime;
+                        var bookingConfirmed = await Book(bookingDate, court, duration);
                         var booking = bookingConfirmed?.Bookings?.FirstOrDefault();
                         if (booking != null)
                         {
-                            SendEmail("Booking confirmed", $"Your booking was confirmed for {currentDateTime.Date.AddDays(14) + bookingTime}");
+                            SendEmail(
+                                "Booking confirmed", 
+                                $"Your booking was confirmed for {bookingDate.ToString(DateConstants.LongDateFormat)}\nCourt {court}, {duration} minutes\n"
+                            );
                             break;
                         }
                     }
