@@ -5,9 +5,12 @@ using Baddy.Enums;
 using Baddy.Helpers;
 using Baddy.Interfaces;
 using Baddy.Models;
+using Baddy.Models.Apis;
 using CommonServiceLocator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Baddy.Android.Services
 {
@@ -31,25 +34,7 @@ namespace Baddy.Android.Services
         {
             var currentDateTime = DateTime.Now;
 
-            var bookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
-            var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
-            var court = _storageService.ReadKey<int>(ScheduleConstants.Court);
-
-            if (CanBook(duration, court))
-            {
-                SendEmail(currentDateTime.Date.AddDays(14) + bookingTime);
-
-                Console.WriteLine(currentDateTime.Date.AddDays(14) + bookingTime);
-                /*var bookingConfirmed = _bookingService.Create(new List<CreateBookingInfo>
-                {
-                    new CreateBookingInfo
-                    {
-                        Date = currentDateTime.Date.AddDays(14) + bookingTime,
-                        Court = court,
-                        Duration = duration
-                    }
-                });*/
-            }
+            _ = HandleBooking(currentDateTime);
 
             var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             var scheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
@@ -62,12 +47,50 @@ namespace Baddy.Android.Services
             return duration > 0 && court > 0;
         }
 
-        private void SendEmail(DateTime scheduledBookingDate)
+        private void SendEmail(string subject, string body)
         {
-            var subject = "Booking confirmed";
-            var body = $"Your booking was confirmed for {scheduledBookingDate}";
-
             _emailService.SendEmail(_appContext.Profile.Name, _appContext.Profile.Email, subject, body);
+        }
+
+        private async Task HandleBooking(DateTime currentDateTime)
+        {
+            var bookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
+            var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
+            var court = _storageService.ReadKey<int>(ScheduleConstants.Court);
+
+            if (CanBook(duration, court))
+            {
+                while(true)
+                {
+                    try
+                    {
+                        var bookingConfirmed = await Book(currentDateTime.Date.AddDays(14) + bookingTime, court, duration);
+                        var booking = bookingConfirmed?.Bookings?.FirstOrDefault();
+                        if (booking != null)
+                        {
+                            SendEmail("Booking confirmed", $"Your booking was confirmed for {currentDateTime.Date.AddDays(14) + bookingTime}");
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        SendEmail("Booking failed", $"An error occurred during your booking: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        private async Task<BookingConfirmed> Book(DateTime date, int court, int duration)
+        {
+            return await _bookingService.Create(new List<CreateBookingInfo>
+            {
+                new CreateBookingInfo
+                {
+                    Date = date,
+                    Court = court,
+                    Duration = duration
+                }
+            });
         }
     }
 }

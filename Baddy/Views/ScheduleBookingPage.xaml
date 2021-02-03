@@ -4,47 +4,49 @@
              x:Class="Baddy.Views.ScheduleBookingPage"
              Title="{Binding Title}">
     <Grid>
-        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-            <ScrollView>
-                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="10">
-                    <Label Text="Schedule options" />
-                    <StackLayout Padding="10">
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Schedule on/off"/>
-                            <Switch IsToggled="{Binding IsScheduled}" />
+        <StackLayout>
+            <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+                <ScrollView>
+                    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="10">
+                        <Label Text="Schedule options" />
+                        <StackLayout Padding="10">
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Schedule on/off"/>
+                                <Switch IsToggled="{Binding IsScheduled}" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Select a schedule day" VerticalTextAlignment="Center" />
+                                <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" HorizontalOptions="FillAndExpand" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Select a schedule time" VerticalTextAlignment="Center" />
+                                <TimePicker Time="{Binding SelectedScheduleTime}" HorizontalOptions="FillAndExpand">
+                                    <TimePicker.Format>hh:mm tt</TimePicker.Format>
+                                </TimePicker>
+                            </StackLayout>
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a schedule day" VerticalTextAlignment="Center" />
-                            <Picker ItemsSource="{Binding ScheduleDays}" SelectedItem="{Binding SelectedScheduleDay}" HorizontalOptions="FillAndExpand" />
+                        <Label Text="Booking options" IsVisible="{Binding IsScheduled}" />
+                        <StackLayout IsVisible="{Binding IsScheduled}" Padding="10">
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Select a booking time" VerticalTextAlignment="Center" />
+                                <TimePicker Time="{Binding SelectedBookingTime}" HorizontalOptions="FillAndExpand">
+                                    <TimePicker.Format>hh:mm tt</TimePicker.Format>
+                                </TimePicker>
+                            </StackLayout>
+                            <StackLayout  Orientation="Horizontal">
+                                <Label Text="Select a duration" VerticalTextAlignment="Center" />
+                                <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" HorizontalOptions="FillAndExpand" />
+                            </StackLayout>
+                            <StackLayout  Orientation="Horizontal">
+                                <Label Text="Select a court" VerticalTextAlignment="Center" />
+                                <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" HorizontalOptions="FillAndExpand" />
+                            </StackLayout>
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a schedule time" VerticalTextAlignment="Center" />
-                            <TimePicker Time="{Binding SelectedScheduleTime}" HorizontalOptions="FillAndExpand">
-                                <TimePicker.Format>hh:mm tt</TimePicker.Format>
-                            </TimePicker>
-                        </StackLayout>
+                        <Button Text="Schedule" Command="{Binding ScheduleCommand}" BackgroundColor="{Binding ThemeColor}" TextColor="White" />
                     </StackLayout>
-                    <Label Text="Booking options" IsVisible="{Binding IsScheduled}" />
-                    <StackLayout IsVisible="{Binding IsScheduled}" Padding="10">
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="Select a booking time" VerticalTextAlignment="Center" />
-                            <TimePicker Time="{Binding SelectedBookingTime}" HorizontalOptions="FillAndExpand">
-                                <TimePicker.Format>hh:mm tt</TimePicker.Format>
-                            </TimePicker>
-                        </StackLayout>
-                        <StackLayout  Orientation="Horizontal">
-                            <Label Text="Select a duration" VerticalTextAlignment="Center" />
-                            <Picker ItemsSource="{Binding Durations}" SelectedItem="{Binding SelectedDuration}" HorizontalOptions="FillAndExpand" />
-                        </StackLayout>
-                        <StackLayout  Orientation="Horizontal">
-                            <Label Text="Select a court" VerticalTextAlignment="Center" />
-                            <Picker ItemsSource="{Binding Courts}" SelectedItem="{Binding SelectedCourt}" HorizontalOptions="FillAndExpand" />
-                        </StackLayout>
-                    </StackLayout>
-                    <Button Text="Schedule" Command="{Binding ScheduleCommand}" BackgroundColor="{Binding ThemeColor}" TextColor="White" />
-                </StackLayout>
-            </ScrollView>
-        </RefreshView>
+                </ScrollView>
+            </RefreshView>
+        </StackLayout>
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            Color="Green"
                            HeightRequest="40"

@@ -121,8 +121,6 @@ namespace Baddy.Services
         {
             var content = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(content);
-
             if (response.IsSuccessStatusCode)
                 return JsonSerializerHelper.GetObject<T>(content);
             else

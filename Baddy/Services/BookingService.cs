@@ -58,7 +58,7 @@ namespace Baddy.Services
                 new KeyValuePair<string, string>("date", $"{booking.Date:yyyy MM dd}"),
                 new KeyValuePair<string, string>("bookings", $"{timeStart},{booking.Court},{booking.Duration},{price},{booking.Date:yyyy MM dd}")
             };
-            //throw new Exception("ex");
+
             return await _httpService.Post<BookingConfirmed>(parameters, UrlConstants.Main);
         }
 

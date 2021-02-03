@@ -186,7 +186,7 @@ namespace Baddy.ViewModels
 
                 MessagingCenter.Send<object>(this, ScheduleConstants.StopScheduler);
 
-                _= _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler stopped");
+                _ = _navigationService.ShowPopup<ToastViewModel>(true, "Booking scheduler stopped");
             }
         }
 
