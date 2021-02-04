@@ -5,7 +5,6 @@ using Baddy.Enums;
 using Baddy.Helpers;
 using Baddy.Interfaces;
 using Baddy.Models;
-using Baddy.Models.Apis;
 using CommonServiceLocator;
 using System;
 using System.Collections.Generic;
@@ -18,6 +17,7 @@ namespace Baddy.Android.Services
     public class Scheduler : BroadcastReceiver
     {
         private readonly IStorageService _storageService;
+        private readonly IAuthService _authService;
         private readonly IBookingService _bookingService;
         private readonly IEmailService _emailService;
         private readonly IAppContext _appContext;
@@ -25,16 +25,19 @@ namespace Baddy.Android.Services
         public Scheduler()
         {
             _storageService = ServiceLocator.Current.GetInstance<IStorageService>();
+            _authService = ServiceLocator.Current.GetInstance<IAuthService>();
             _bookingService = ServiceLocator.Current.GetInstance<IBookingService>();
             _emailService = ServiceLocator.Current.GetInstance<IEmailService>();
             _appContext = ServiceLocator.Current.GetInstance<IAppContext>();
         }
 
-        public override void OnReceive(Context context, Intent intent)
+        public override async void OnReceive(Context context, Intent intent)
         {
             var currentDateTime = DateTime.Now;
 
-            _ = HandleBooking(currentDateTime);
+            var authorized = await HandleLogin();
+            if (authorized)
+                await HandleBooking(currentDateTime);
 
             var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             var scheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
@@ -46,14 +49,19 @@ namespace Baddy.Android.Services
             SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.ToString(DateConstants.LongDateTimeFormat)}");
         }
 
-        private bool CanBook(int duration, int court)
+        private async Task<bool> HandleLogin()
         {
-            return duration > 0 && court > 0;
-        }
+            var cardNumber = _storageService.ReadKey<string>(PropertyConstants.CardNumber);
+            var pinNumber = _storageService.ReadKey<string>(PropertyConstants.PinNumber);
 
-        private void SendEmail(string subject, string body)
-        {
-            _emailService.SendEmail(_appContext.Profile.Name, _appContext.Profile.Email, subject, body);
+            if (string.IsNullOrWhiteSpace(cardNumber) || string.IsNullOrWhiteSpace(pinNumber))
+                return false;
+
+            var loginResult = await _authService.Login(cardNumber, pinNumber);
+            if (string.IsNullOrWhiteSpace(loginResult?.Token))
+                return false;
+
+            return await _authService.Authorize(loginResult.Token);
         }
 
         private async Task HandleBooking(DateTime currentDateTime)
@@ -62,19 +70,27 @@ namespace Baddy.Android.Services
             var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
             var court = _storageService.ReadKey<int>(ScheduleConstants.Court);
 
-            if (CanBook(duration, court))
+            if (duration > 0 && court > 0)
             {
                 while(true)
                 {
                     try
                     {
                         var bookingDate = currentDateTime.Date.AddDays(14) + bookingTime;
-                        var bookingConfirmed = await Book(bookingDate, court, duration);
+                        var bookingConfirmed = await _bookingService.Create(new List<CreateBookingInfo>
+                        {
+                            new CreateBookingInfo
+                            {
+                                Date = bookingDate,
+                                Court = court,
+                                Duration = duration
+                            }
+                        });
                         var booking = bookingConfirmed?.Bookings?.FirstOrDefault();
                         if (booking != null)
                         {
                             SendEmail(
-                                "Booking confirmed", 
+                                "Booking confirmed",
                                 $"Your booking was confirmed for {bookingDate.ToString(DateConstants.LongDateTimeFormat)}" +
                                 $"\nCourt {court}, {duration} minutes\n\n" +
                                 $"Current time is: {DateTime.Now.ToString(DateConstants.VeryLongDateTimeFormat)}"
@@ -90,17 +106,9 @@ namespace Baddy.Android.Services
             }
         }
 
-        private async Task<BookingConfirmed> Book(DateTime date, int court, int duration)
+        private void SendEmail(string subject, string body)
         {
-            return await _bookingService.Create(new List<CreateBookingInfo>
-            {
-                new CreateBookingInfo
-                {
-                    Date = date,
-                    Court = court,
-                    Duration = duration
-                }
-            });
+            _emailService.SendEmail(_appContext.Profile.FirstName, _appContext.Profile.Email, subject, body);
         }
     }
 }
