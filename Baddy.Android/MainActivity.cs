@@ -20,8 +20,12 @@ namespace Baddy.Droid
     [Activity(Label = "Badcrew", Icon = "@mipmap/badcrew", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : FormsAppCompatActivity
     {
+        private static MainActivity Current;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            Current = this;
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
@@ -94,7 +98,8 @@ namespace Baddy.Droid
         {
             MessagingCenter.Subscribe<object>(this, ScheduleConstants.StartForegroundService, (sender) =>
             {
-                SchedulerHelper.StartForegroundService(this);
+                if (this == Current)
+                    SchedulerHelper.StartForegroundService(this);
             });
 
             MessagingCenter.Subscribe<object>(this, ScheduleConstants.StopForegroundService, (sender) =>
