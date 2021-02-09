@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.OS;
 using Baddy.Constants;
 using Baddy.Droid.Helpers;
 using Baddy.Enums;
@@ -9,7 +10,6 @@ using CommonServiceLocator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Baddy.Android.Services
@@ -34,6 +34,10 @@ namespace Baddy.Android.Services
 
         public override async void OnReceive(Context context, Intent intent)
         {
+            var powerManager = (PowerManager)context.GetSystemService(Context.PowerService);
+            var wakeLock = powerManager.NewWakeLock(WakeLockFlags.Partial, "Wakelock");
+            wakeLock.Acquire();
+
             var preScheduleTime = DateTime.Now;
 
             var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
@@ -48,19 +52,22 @@ namespace Baddy.Android.Services
                 authorized = await HandleLogin();
 
             var postLoginTime = DateTime.Now;
+
             var timeBeforeScheduledTime = (int)scheduledTime.Subtract(postLoginTime).TotalMilliseconds + 1;
 
             await Task.Delay(timeBeforeScheduledTime);
 
             var preBookingTime = DateTime.Now;
 
-            await HandleBooking(preScheduleTime, preLoginTime, postLoginTime, preBookingTime);
+            await HandleBooking(preScheduleTime, preLoginTime, postLoginTime, preBookingTime, timeBeforeScheduledTime);
 
             var nextScheduleDateTime = DateTimeHelper.NextScheduledDate(preBookingTime, scheduleDay, scheduleTime);
 
             SchedulerHelper.StartScheduler(context, nextScheduleDateTime);
 
             SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.AddMinutes(DateConstants.BufferPeriod).ToString(DateConstants.LongDateTimeFormat)}");
+
+            wakeLock.Release();
         }
 
         private async Task<bool> HandleLogin()
@@ -78,7 +85,7 @@ namespace Baddy.Android.Services
             return await _authService.Authorize(loginResult.Token);
         }
 
-        private async Task HandleBooking(DateTime preScheduleTime, DateTime preLoginTime, DateTime postLoginTime, DateTime preBookingTime)
+        private async Task HandleBooking(DateTime preScheduleTime, DateTime preLoginTime, DateTime postLoginTime, DateTime preBookingTime, int timeToWait)
         {
             var bookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
             var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
@@ -110,6 +117,7 @@ namespace Baddy.Android.Services
                                 $"Pre-schedule logging in time was: {preScheduleTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
                                 $"Pre-logging in time was: {preLoginTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
                                 $"Post-logging in time was: {postLoginTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
+                                $"Waiting time in milliseconds was: {timeToWait}\n" +
                                 $"Pre-booking time was: {preBookingTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
                                 $"Post-booking time is: {DateTime.Now.ToString(DateConstants.VeryLongDateTimeFormat)}"
                             );
