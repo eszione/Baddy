@@ -6,5 +6,6 @@
         public static string LongDateFormat => "dddd, dd MMMM yyyy";
         public static string LongDateTimeFormat => "dddd, dd MMMM yyyy h:mm tt";
         public static string VeryLongDateTimeFormat => "dddd, dd MMMM yyyy h:mm:ss tt";
+        public static int BufferPeriod = 2;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Baddy.Enums;
+﻿using Baddy.Constants;
+using Baddy.Enums;
 using System;
 
 namespace Baddy.Helpers
@@ -21,11 +22,16 @@ namespace Baddy.Helpers
 
         public static DateTime NextScheduledDate(DateTime currentDateTime, Days scheduledDay, TimeSpan time)
         {
-            var nextScheduledDate = currentDateTime.Date.AddDays(GetDaysUntilNextScheduledDate(currentDateTime, scheduledDay)) + time;
+            var scheduledDate = GetCurrentScheduledDate(currentDateTime, scheduledDay, time);
 
-            return nextScheduledDate > currentDateTime
-                ? nextScheduledDate
-                : nextScheduledDate.AddDays(7);
+            return scheduledDate > currentDateTime.AddMinutes(DateConstants.BufferPeriod)
+                ? scheduledDate.AddMinutes(-DateConstants.BufferPeriod)
+                : scheduledDate.AddDays(7).AddMinutes(-DateConstants.BufferPeriod);
+        }
+
+        public static DateTime GetCurrentScheduledDate(DateTime currentDateTime, Days scheduledDay, TimeSpan time)
+        {
+            return currentDateTime.Date.AddDays(GetDaysUntilNextScheduledDate(currentDateTime, scheduledDay)) + time;
         }
 
         private static int GetDaysUntilNextScheduledDate(DateTime currentDateTime, Days scheduledDay)

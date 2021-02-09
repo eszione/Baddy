@@ -9,6 +9,7 @@ using CommonServiceLocator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Baddy.Android.Services
@@ -33,20 +34,33 @@ namespace Baddy.Android.Services
 
         public override async void OnReceive(Context context, Intent intent)
         {
-            var currentDateTime = DateTime.Now;
-
-            var authorized = await HandleLogin();
-            if (authorized)
-                await HandleBooking(currentDateTime);
+            var preScheduleTime = DateTime.Now;
 
             var scheduleDay = _storageService.ReadKey<Days>(ScheduleConstants.ScheduleDay);
             var scheduleTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.ScheduleTime);
 
-            var nextScheduleDateTime = DateTimeHelper.NextScheduledDate(currentDateTime, scheduleDay, scheduleTime);
+            var scheduledTime = DateTimeHelper.GetCurrentScheduledDate(DateTime.Now, scheduleDay, scheduleTime);
+
+            var preLoginTime = DateTime.Now;
+
+            var authorized = await HandleLogin();
+            while (!authorized)
+                authorized = await HandleLogin();
+
+            var postLoginTime = DateTime.Now;
+            var timeBeforeScheduledTime = (int)scheduledTime.Subtract(postLoginTime).TotalMilliseconds + 1;
+
+            await Task.Delay(timeBeforeScheduledTime);
+
+            var preBookingTime = DateTime.Now;
+
+            await HandleBooking(preScheduleTime, preLoginTime, postLoginTime, preBookingTime);
+
+            var nextScheduleDateTime = DateTimeHelper.NextScheduledDate(preBookingTime, scheduleDay, scheduleTime);
 
             SchedulerHelper.StartScheduler(context, nextScheduleDateTime);
 
-            SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.ToString(DateConstants.LongDateTimeFormat)}");
+            SendEmail("Next scheduled booking", $"Your next booking is scheduled to run on: {nextScheduleDateTime.AddMinutes(DateConstants.BufferPeriod).ToString(DateConstants.LongDateTimeFormat)}");
         }
 
         private async Task<bool> HandleLogin()
@@ -64,7 +78,7 @@ namespace Baddy.Android.Services
             return await _authService.Authorize(loginResult.Token);
         }
 
-        private async Task HandleBooking(DateTime currentDateTime)
+        private async Task HandleBooking(DateTime preScheduleTime, DateTime preLoginTime, DateTime postLoginTime, DateTime preBookingTime)
         {
             var bookingTime = _storageService.ReadKey<TimeSpan>(ScheduleConstants.BookingTime);
             var duration = _storageService.ReadKey<int>(ScheduleConstants.BookingDuration);
@@ -76,7 +90,7 @@ namespace Baddy.Android.Services
                 {
                     try
                     {
-                        var bookingDate = currentDateTime.Date.AddDays(14) + bookingTime;
+                        var bookingDate = preBookingTime.Date.AddDays(14) + bookingTime;
                         var bookingConfirmed = await _bookingService.Create(new List<CreateBookingInfo>
                         {
                             new CreateBookingInfo
@@ -93,7 +107,11 @@ namespace Baddy.Android.Services
                                 "Booking confirmed",
                                 $"Your booking was confirmed for {bookingDate.ToString(DateConstants.LongDateTimeFormat)}" +
                                 $"\nCourt {court}, {duration} minutes\n\n" +
-                                $"Current time is: {DateTime.Now.ToString(DateConstants.VeryLongDateTimeFormat)}"
+                                $"Pre-schedule logging in time was: {preScheduleTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
+                                $"Pre-logging in time was: {preLoginTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
+                                $"Post-logging in time was: {postLoginTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
+                                $"Pre-booking time was: {preBookingTime.ToString(DateConstants.VeryLongDateTimeFormat)}\n" +
+                                $"Post-booking time is: {DateTime.Now.ToString(DateConstants.VeryLongDateTimeFormat)}"
                             );
                             break;
                         }
