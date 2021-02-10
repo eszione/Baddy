@@ -1,0 +1,4 @@
+Client ID: 63750381013-lskphjf5191ji7nn7haj1iujnl99kvsm.apps.googleusercontent.com
+
+Get thumbprint
+	keytool -keystore path-to-debug-or-production-keystore -list -v
