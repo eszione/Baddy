@@ -48,6 +48,9 @@ namespace Baddy.Services
                 case Type model when model == typeof(ScheduleBookingViewModel):
                     await flyoutPage.Detail.Navigation.PushAsync(new ScheduleBookingPage());
                     break;
+                case Type model when model == typeof(GridViewModel):
+                    await flyoutPage.Detail.Navigation.PushAsync(new GridPage());
+                    break;
                 default:
                     await flyoutPage.DisplayAlert("Navigation", $"Model of type: {typeof(T)} not supported!", "OK");
                     break;

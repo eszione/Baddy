@@ -4,6 +4,7 @@
     {
         Bookings,
         CreateBooking,
+        Grid,
         Home,
         Login,
         Logout,

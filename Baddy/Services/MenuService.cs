@@ -4,6 +4,7 @@ using Baddy.Enums;
 using Baddy.Interfaces;
 using Baddy.Models;
 using Baddy.ViewModels;
+using Baddy.Views;
 
 namespace Baddy.Services
 {
@@ -43,6 +44,17 @@ namespace Baddy.Services
                     {
                         await _navigationService.CloseMenu();
                         await _navigationService.NavigateTo<LoginViewModel>();
+                    }
+                },
+                new MenuItem
+                {
+                    Action = MenuAction.Grid,
+                    Visibility = MenuItemVisibility.Always,
+                    Name = MenuConstants.Grid,
+                    Handler = async () =>
+                    {
+                        await _navigationService.CloseMenu();
+                        await _navigationService.NavigateTo<GridViewModel>();
                     }
                 },
                 new MenuItem

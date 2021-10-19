@@ -53,7 +53,7 @@ namespace Baddy.Android.Services
 
             var postLoginTime = DateTime.Now;
 
-            var timeBeforeScheduledTime = (int)scheduledTime.Subtract(postLoginTime).TotalMilliseconds + 1;
+            var timeBeforeScheduledTime = (int)scheduledTime.Subtract(postLoginTime).TotalMilliseconds;
 
             await Task.Delay(timeBeforeScheduledTime);
 
