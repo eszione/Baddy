@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baddy", "Baddy\Baddy.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baddy.Android", "Baddy.Android\Baddy.Android.csproj", "{FB564151-DAA0-403E-AAA1-1215578823C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baddy.iOS", "Baddy.iOS\Baddy.iOS.csproj", "{17945A91-68AB-48FA-B91C-265911CE21E5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Distribution", "Distribution", "{58561377-54BC-4E06-A33B-AFD272FEA2E9}"
 	ProjectSection(SolutionItems) = preProject
 		Distribution\badcrew.keyInfo = Distribution\badcrew.keyInfo
@@ -32,9 +30,5 @@ Global
 		{FB564151-DAA0-403E-AAA1-1215578823C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB564151-DAA0-403E-AAA1-1215578823C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB564151-DAA0-403E-AAA1-1215578823C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17945A91-68AB-48FA-B91C-265911CE21E5}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
-		{17945A91-68AB-48FA-B91C-265911CE21E5}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
-		{17945A91-68AB-48FA-B91C-265911CE21E5}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
-		{17945A91-68AB-48FA-B91C-265911CE21E5}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
 	EndGlobalSection
 EndGlobal
