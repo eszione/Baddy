@@ -3,3 +3,5 @@
 .DS_Store
 .idea/
 Baddy.sln.DotSettings.user
+.vs
+global.json
