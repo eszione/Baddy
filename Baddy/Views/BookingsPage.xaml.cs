@@ -13,7 +13,7 @@ namespace Baddy.Views
             BindingContext = ServiceLocator.Current.GetInstance<BookingsViewModel>();
         }
 
-        protected async override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
